@@ -214,6 +214,28 @@
           gap: 10px;
         }
 
+        @media (max-width: 768px) {
+          .container {
+            padding: 20px;
+          }
+          
+          h1 {
+            font-size: 2rem;
+          }
+          
+          .search-bar,
+          .input-group input,
+          button,
+          .small-button {
+            font-size: 0.9rem;
+            padding: 10px 15px;
+          }
+          
+          .task-title {
+            font-size: 1rem;
+          }
+        }
+
         @media (max-width: 480px) {
           .input-group {
             flex-direction: column;
@@ -221,6 +243,26 @@
           
           .task-buttons, .time-buttons {
             justify-content: space-between;
+          }
+          
+          .container {
+            padding: 15px;
+          }
+          
+          h1 {
+            font-size: 1.5rem;
+          }
+          
+          .search-bar,
+          .input-group input,
+          button,
+          .small-button {
+            font-size: 0.8rem;
+            padding: 8px 10px;
+          }
+          
+          .task-title {
+            font-size: 0.9rem;
           }
         }
     </style>
@@ -403,16 +445,16 @@
 
         // Save tasks to localStorage
         function saveTasks() {
-          localStorage.setItem('tasks', JSON.stringify(tasks));
+            localStorage.setItem('tasks', JSON.stringify(tasks));
         }
 
         // Load tasks from localStorage
         function loadTasks() {
-          const savedTasks = localStorage.getItem('tasks');
-          if (savedTasks) {
-            tasks = JSON.parse(savedTasks);
-            updateTaskList();
-          }
+            const savedTasks = localStorage.getItem('tasks');
+            if (savedTasks) {
+                tasks = JSON.parse(savedTasks);
+                renderTasks();
+            }
         }
 
         // Call loadTasks() when the page loads
