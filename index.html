@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cool Task Tracker</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&family=Raleway:wght@600&display=swap');
+
+        :root {
+          --primary: #FF69B4;
+          --secondary: #FFC0CB;
+          --background: #FFF0F5;
+          --text: #333333;
+          --white: #FFFFFF;
+          --shadow: rgba(255, 105, 180, 0.2);
+        }
+
+        body {
+          font-family: 'Quicksand', sans-serif;
+          background-color: var(--background);
+          color: var(--text);
+          line-height: 1.6;
+          padding: 20px;
+        }
+
+        .container {
+          max-width: 600px;
+          margin: 0 auto;
+          background: var(--white);
+          border-radius: 20px;
+          padding: 30px;
+          box-shadow: 0 10px 30px var(--shadow);
+        }
+
+        h1 {
+          font-size: 2.5rem;
+          color: var(--primary);
+          text-align: center;
+          margin-bottom: 1.5rem;
+          font-weight: 700;
+        }
+
+        .overall-progress-bar {
+          height: 15px;
+          background: var(--secondary);
+          border-radius: 5px;
+          overflow: hidden;
+          margin-bottom: 1.5rem;
+          position: relative;
+        }
+
+        .overall-progress {
+          height: 100%;
+          background: var(--primary);
+          transition: width 0.3s ease;
+        }
+
+        .overall-progress-text {
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem;
+            color: #333;
+        }
+
+        .progress-text {
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: var(--text);
+            text-align: center;
+        }
+
+        .search-bar,
+        .input-group input {
+          width: calc(100% - 2rem);
+          padding: 12px 15px;
+          border: 2px solid var(--secondary);
+          border-radius: 10px;
+          font-size: 1rem;
+          margin-bottom: 15px;
+          transition: border-color 0.3s ease;
+        }
+
+        .search-bar:focus,
+        .input-group input:focus {
+          outline: none;
+          border-color: var(--primary);
+        }
+
+        .input-group {
+          display: flex;
+          gap: 15px;
+          margin-bottom: 15px;
+        }
+
+        .input-group button {
+          height: auto;
+        }
+
+        button {
+          background: var(--primary);
+          color: var(--white);
+          border: none;
+          padding: 12px 20px;
+          border-radius: 10px;
+          font-size: 1rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+          background: #FF1493;
+          transform: translateY(-2px);
+        }
+
+        .small-button {
+          padding: 8px 12px;
+          font-size: 0.9rem;
+        }
+
+        #csvInput {
+          display: none;
+        }
+
+        #csvLabel, .small-button {
+          background: var(--primary);
+          color: var(--white);
+          border: none;
+          padding: 12px 20px;
+          border-radius: 10px;
+          font-size: 1rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        #csvLabel:hover, .small-button:hover {
+          background: #FF1493;
+          transform: translateY(-2px);
+        }
+
+        .task {
+          background: var(--white);
+          border: 2px solid var(--secondary);
+          border-radius: 15px;
+          padding: 20px;
+          margin-bottom: 20px;
+          transition: box-shadow 0.3s ease;
+        }
+
+        .task:hover {
+          box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .task-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 15px;
+        }
+
+        .task-title {
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: var(--primary);
+        }
+
+        .progress-bar {
+            position: relative;
+            height: 18px;
+            background: var(--secondary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .task-buttons, .time-buttons {
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
+
+        .task-buttons button, .time-buttons button {
+          padding: 8px 12px;
+          font-size: 0.9rem;
+        }
+
+        .time-spent {
+          font-size: 0.9rem;
+          color: var(--text);
+          margin-bottom: 10px;
+        }
+
+        .edit-form {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        @media (max-width: 480px) {
+          .input-group {
+            flex-direction: column;
+          }
+          
+          .task-buttons, .time-buttons {
+            justify-content: space-between;
+          }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cool Task Tracker</h1>
+        <div class="overall-progress-bar">
+            <div class="overall-progress" id="overallProgress"></div>
+            <div class="overall-progress-text" id="overallProgressText">0/1000</div>
+        </div>
+        <input type="text" id="searchInput" class="search-bar" placeholder="Search tasks...">
+        <div class="input-group">
+            <input type="text" id="taskInput" placeholder="Enter a new task">
+            <input type="number" id="taskGoal" placeholder="Task goal">
+            <button id="addTask">Add</button>
+        </div>
+        <div id="taskList"></div>
+        <label for="csvInput" id="csvLabel" class="small-button">Import XLSX</label>
+        <input type="file" id="csvInput" accept=".xlsx">
+        <button onclick="clearStorage()" class="small-button">Clear Storage</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+    <script>
+        const goal = 1000 * 60; // 1000 hours in minutes
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        const taskInput = document.getElementById('taskInput');
+        const taskGoal = document.getElementById('taskGoal');
+        const addTaskButton = document.getElementById('addTask');
+        const taskList = document.getElementById('taskList');
+        const csvInput = document.getElementById('csvInput');
+        const overallProgress = document.getElementById('overallProgress');
+        const overallProgressText = document.getElementById('overallProgressText');
+        const searchInput = document.getElementById('searchInput');
+
+        function clearStorage() {
+            localStorage.removeItem('tasks');
+            tasks = [];
+            renderTasks();
+            updateOverallProgress();
+        }
+
+        function updateOverallProgress() {
+            const totalMinutes = tasks.reduce((sum, task) => sum + task.timeSpent, 0);
+            const progressPercentage = Math.min((totalMinutes / goal) * 100, 100);
+            overallProgress.style.width = progressPercentage + '%';
+            overallProgressText.textContent = `${Math.floor(totalMinutes / 60)}/${goal / 60}`;
+        }
+
+        function renderTasks() {
+            const searchQuery = searchInput.value.toLowerCase();
+            taskList.innerHTML = '';
+            tasks.filter(task => task.name.toLowerCase().includes(searchQuery)).forEach((task, index) => {
+                const progressPercentage = task.goal > 0 ? (task.progress / task.goal) * 100 : 0;
+                const taskElement = document.createElement('div');
+                taskElement.className = 'task';
+                taskElement.innerHTML = `
+                    <div class="task-header">
+                        <span class="task-title">${task.name}</span>
+                        <div class="task-buttons">
+                            <button onclick="toggleEditForm(${index})">Edit</button>
+                            <button onclick="deleteTask(${index})">Delete</button>
+                        </div>
+                    </div>
+                    <p>Time Spent: ${task.timeSpent} minutes</p>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: ${progressPercentage}%"></div>
+                        <div class="progress-text">${task.progress}/${task.goal}</div>
+                    </div>
+                    <div class="increment-buttons">
+                        <button class="small-button" onclick="incrementTime(${index}, 1)">+1 Min</button>
+                        <button class="small-button" onclick="incrementTime(${index}, 5)">+5 Min</button>
+                        <button class="small-button" onclick="incrementTime(${index}, 10)">+10 Min</button>
+                        <button class="small-button" onclick="incrementProgress(${index})">+1 Prog</button>
+                    </div>
+                    <div class="edit-form" id="editForm${index}" style="display: none;">
+                        <input type="text" id="editName${index}" value="${task.name}">
+                        <input type="number" id="editGoal${index}" value="${task.goal}">
+                        <input type="number" id="editProgress${index}" value="${task.progress}">
+                        <input type="number" id="editTime${index}" value="${task.timeSpent}">
+                        <button class="small-button" onclick="saveEdit(${index})">Save</button>
+                    </div>
+                `;
+                taskList.appendChild(taskElement);
+            });
+            updateOverallProgress();
+        }
+
+        function addTask() {
+            const name = taskInput.value.trim();
+            const goal = parseInt(taskGoal.value) || 0;
+            if (name) {
+                tasks.unshift({ name, timeSpent: 0, goal, progress: 0 });
+                taskInput.value = '';
+                taskGoal.value = '';
+                saveTasks();
+                renderTasks();
+            }
+        }
+
+        function toggleEditForm(index) {
+            const editForm = document.getElementById(`editForm${index}`);
+            editForm.style.display = editForm.style.display === 'none' ? 'flex' : 'none';
+        }
+
+        function saveEdit(index) {
+            const newName = document.getElementById(`editName${index}`).value.trim();
+            const newGoal = parseInt(document.getElementById(`editGoal${index}`).value) || 0;
+            const newProgress = parseInt(document.getElementById(`editProgress${index}`).value) || 0;
+            const newTime = parseInt(document.getElementById(`editTime${index}`).value) || 0;
+            if (newName) {
+                const editedTask = tasks.splice(index, 1)[0];
+                editedTask.name = newName;
+                editedTask.goal = newGoal;
+                editedTask.progress = newProgress;
+                editedTask.timeSpent = newTime;
+                tasks.unshift(editedTask);
+                saveTasks();
+                renderTasks();
+            }
+        }
+
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            saveTasks();
+            renderTasks();
+        }
+
+        function incrementProgress(index) {
+            const task = tasks.splice(index, 1)[0];
+            task.progress++;
+            tasks.unshift(task);
+            saveTasks();
+            renderTasks();
+        }
+
+        function incrementTime(index, minutes) {
+            const task = tasks.splice(index, 1)[0];
+            task.timeSpent += minutes;
+            tasks.unshift(task);
+            saveTasks();
+            renderTasks();
+        }
+
+        function saveTasks() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        function importXLSX(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, {type: 'array'});
+                const sheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[sheetName];
+                const json = XLSX.utils.sheet_to_json(worksheet);
+                const newTasks = json.map(row => ({
+                    name: row.Name || '',
+                    goal: parseInt(row.Goal) || 0,
+                    progress: parseInt(row.Progress) || 0,
+                    timeSpent: parseInt(row.TimeSpent) || 0
+                }));
+                tasks = newTasks.concat(tasks);
+                saveTasks();
+                renderTasks();
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        addTaskButton.addEventListener('click', addTask);
+        taskInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTask();
+        });
+        searchInput.addEventListener('input', renderTasks);
+        csvInput.addEventListener('change', importXLSX);
+
+        renderTasks();
+
+        // Save tasks to localStorage
+        function saveTasks() {
+          localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        // Load tasks from localStorage
+        function loadTasks() {
+          const savedTasks = localStorage.getItem('tasks');
+          if (savedTasks) {
+            tasks = JSON.parse(savedTasks);
+            updateTaskList();
+          }
+        }
+
+        // Call loadTasks() when the page loads
+        window.addEventListener('load', loadTasks);
+
+        // Call saveTasks() whenever you modify the tasks array
+    </script>
+</body>
+</html>
