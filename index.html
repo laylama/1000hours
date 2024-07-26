@@ -22,6 +22,7 @@
           color: var(--text);
           line-height: 1.6;
           padding: 20px;
+          margin: 0;
         }
 
         .container {
@@ -29,15 +30,15 @@
           margin: 0 auto;
           background: var(--white);
           border-radius: 20px;
-          padding: 30px;
+          padding: 20px;
           box-shadow: 0 10px 30px var(--shadow);
         }
 
         h1 {
-          font-size: 2.5rem;
+          font-size: 2rem;
           color: var(--primary);
           text-align: center;
-          margin-bottom: 1.5rem;
+          margin-bottom: 1rem;
           font-weight: 700;
         }
 
@@ -46,7 +47,7 @@
           background: var(--secondary);
           border-radius: 5px;
           overflow: hidden;
-          margin-bottom: 1.5rem;
+          margin-bottom: 1rem;
           position: relative;
         }
 
@@ -83,7 +84,7 @@
         .search-bar,
         .input-group input {
           width: calc(100% - 2rem);
-          padding: 12px 15px;
+          padding: 10px 12px;
           border: 2px solid var(--secondary);
           border-radius: 10px;
           font-size: 1rem;
@@ -99,7 +100,8 @@
 
         .input-group {
           display: flex;
-          gap: 15px;
+          flex-direction: column;
+          gap: 10px;
           margin-bottom: 15px;
         }
 
@@ -111,7 +113,7 @@
           background: var(--primary);
           color: var(--white);
           border: none;
-          padding: 12px 20px;
+          padding: 10px 15px;
           border-radius: 10px;
           font-size: 1rem;
           font-weight: 600;
@@ -137,7 +139,7 @@
           background: var(--primary);
           color: var(--white);
           border: none;
-          padding: 12px 20px;
+          padding: 10px 15px;
           border-radius: 10px;
           font-size: 1rem;
           font-weight: 600;
@@ -154,8 +156,8 @@
           background: var(--white);
           border: 2px solid var(--secondary);
           border-radius: 15px;
-          padding: 20px;
-          margin-bottom: 20px;
+          padding: 15px;
+          margin-bottom: 15px;
           transition: box-shadow 0.3s ease;
         }
 
@@ -167,22 +169,22 @@
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 15px;
+          margin-bottom: 10px;
         }
 
         .task-title {
-          font-size: 1.2rem;
+          font-size: 1rem;
           font-weight: 600;
           color: var(--primary);
         }
 
         .progress-bar {
             position: relative;
-            height: 18px;
+            height: 15px;
             background: var(--secondary);
             border-radius: 4px;
             overflow: hidden;
-            margin: 15px 0;
+            margin: 10px 0;
         }
 
         .progress {
@@ -223,11 +225,11 @@
 
         @media (max-width: 768px) {
           .container {
-            padding: 20px;
+            padding: 15px;
           }
           
           h1 {
-            font-size: 2rem;
+            font-size: 1.8rem;
           }
           
           .search-bar,
@@ -235,11 +237,11 @@
           button,
           .small-button {
             font-size: 0.9rem;
-            padding: 10px 15px;
+            padding: 8px 10px;
           }
           
           .task-title {
-            font-size: 1rem;
+            font-size: 0.9rem;
           }
         }
 
@@ -253,7 +255,7 @@
           }
           
           .container {
-            padding: 15px;
+            padding: 10px;
           }
           
           h1 {
@@ -265,11 +267,11 @@
           button,
           .small-button {
             font-size: 0.8rem;
-            padding: 8px 10px;
+            padding: 6px 8px;
           }
           
           .task-title {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
           }
         }
     </style>
