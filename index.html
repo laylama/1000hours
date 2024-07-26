@@ -214,6 +214,13 @@
           gap: 10px;
         }
 
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
         @media (max-width: 768px) {
           .container {
             padding: 20px;
@@ -268,28 +275,43 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="appContainer">
         <h1>Cool Task Tracker</h1>
-        <div class="overall-progress-bar">
-            <div class="overall-progress" id="overallProgress"></div>
-            <div class="overall-progress-text" id="overallProgressText">0/1000</div>
+        <div id="loginContainer">
+            <h2>Login</h2>
+            <form class="login-form" id="loginForm">
+                <input type="text" id="usernameInput" placeholder="Enter username" required>
+                <button type="submit">Login</button>
+            </form>
         </div>
-        <input type="text" id="searchInput" class="search-bar" placeholder="Search tasks...">
-        <div class="input-group">
-            <input type="text" id="taskInput" placeholder="Enter a new task">
-            <input type="number" id="taskGoal" placeholder="Task goal">
-            <button id="addTask">Add</button>
+        <div id="taskContainer" style="display: none;">
+            <div class="overall-progress-bar">
+                <div class="overall-progress" id="overallProgress"></div>
+                <div class="overall-progress-text" id="overallProgressText">0/1000</div>
+            </div>
+            <input type="text" id="searchInput" class="search-bar" placeholder="Search tasks...">
+            <div class="input-group">
+                <input type="text" id="taskInput" placeholder="Enter a new task">
+                <input type="number" id="taskGoal" placeholder="Task goal">
+                <button id="addTask">Add</button>
+            </div>
+            <div id="taskList"></div>
+            <label for="csvInput" id="csvLabel" class="small-button">Import XLSX</label>
+            <input type="file" id="csvInput" accept=".xlsx">
+            <button onclick="clearStorage()" class="small-button">Clear Storage</button>
         </div>
-        <div id="taskList"></div>
-        <label for="csvInput" id="csvLabel" class="small-button">Import XLSX</label>
-        <input type="file" id="csvInput" accept=".xlsx">
-        <button onclick="clearStorage()" class="small-button">Clear Storage</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
     <script>
         const goal = 1000 * 60; // 1000 hours in minutes
         let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let currentUser = localStorage.getItem('currentUser');
+
+        const loginContainer = document.getElementById('loginContainer');
+        const taskContainer = document.getElementById('taskContainer');
+        const usernameInput = document.getElementById('usernameInput');
+        const loginForm = document.getElementById('loginForm');
         const taskInput = document.getElementById('taskInput');
         const taskGoal = document.getElementById('taskGoal');
         const addTaskButton = document.getElementById('addTask');
@@ -322,7 +344,7 @@
                 taskElement.className = 'task';
                 taskElement.innerHTML = `
                     <div class="task-header">
-                        <span class="task-title">${task.name}</span>
+                        <span class="task-title">${task.name} <small>(by ${task.user})</small></span>
                         <div class="task-buttons">
                             <button onclick="toggleEditForm(${index})">Edit</button>
                             <button onclick="deleteTask(${index})">Delete</button>
@@ -355,8 +377,8 @@
         function addTask() {
             const name = taskInput.value.trim();
             const goal = parseInt(taskGoal.value) || 0;
-            if (name) {
-                tasks.unshift({ name, timeSpent: 0, goal, progress: 0 });
+            if (name && currentUser) {
+                tasks.unshift({ name, timeSpent: 0, goal, progress: 0, user: currentUser });
                 taskInput.value = '';
                 taskGoal.value = '';
                 saveTasks();
@@ -375,12 +397,7 @@
             const newProgress = parseInt(document.getElementById(`editProgress${index}`).value) || 0;
             const newTime = parseInt(document.getElementById(`editTime${index}`).value) || 0;
             if (newName) {
-                const editedTask = tasks.splice(index, 1)[0];
-                editedTask.name = newName;
-                editedTask.goal = newGoal;
-                editedTask.progress = newProgress;
-                editedTask.timeSpent = newTime;
-                tasks.unshift(editedTask);
+                tasks[index] = { ...tasks[index], name: newName, goal: newGoal, progress: newProgress, timeSpent: newTime };
                 saveTasks();
                 renderTasks();
             }
@@ -393,17 +410,13 @@
         }
 
         function incrementProgress(index) {
-            const task = tasks.splice(index, 1)[0];
-            task.progress++;
-            tasks.unshift(task);
+            tasks[index].progress++;
             saveTasks();
             renderTasks();
         }
 
         function incrementTime(index, minutes) {
-            const task = tasks.splice(index, 1)[0];
-            task.timeSpent += minutes;
-            tasks.unshift(task);
+            tasks[index].timeSpent += minutes;
             saveTasks();
             renderTasks();
         }
@@ -425,7 +438,8 @@
                     name: row.Name || '',
                     goal: parseInt(row.Goal) || 0,
                     progress: parseInt(row.Progress) || 0,
-                    timeSpent: parseInt(row.TimeSpent) || 0
+                    timeSpent: parseInt(row.TimeSpent) || 0,
+                    user: currentUser
                 }));
                 tasks = newTasks.concat(tasks);
                 saveTasks();
@@ -434,6 +448,38 @@
             reader.readAsArrayBuffer(file);
         }
 
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = usernameInput.value.trim();
+            if (username) {
+                currentUser = username;
+                localStorage.setItem('currentUser', username);
+                loginContainer.style.display = 'none';
+                taskContainer.style.display = 'block';
+                renderTasks();
+            }
+        }
+
+        function loadTasks() {
+            const savedTasks = localStorage.getItem('tasks');
+            if (savedTasks) {
+                tasks = JSON.parse(savedTasks);
+            }
+            renderTasks();
+        }
+
+        function checkUser() {
+            if (currentUser) {
+                loginContainer.style.display = 'none';
+                taskContainer.style.display = 'block';
+                renderTasks();
+            } else {
+                loginContainer.style.display = 'block';
+                taskContainer.style.display = 'none';
+            }
+        }
+
+        loginForm.addEventListener('submit', handleLogin);
         addTaskButton.addEventListener('click', addTask);
         taskInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') addTask();
@@ -441,26 +487,10 @@
         searchInput.addEventListener('input', renderTasks);
         csvInput.addEventListener('change', importXLSX);
 
-        renderTasks();
-
-        // Save tasks to localStorage
-        function saveTasks() {
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-        }
-
-        // Load tasks from localStorage
-        function loadTasks() {
-            const savedTasks = localStorage.getItem('tasks');
-            if (savedTasks) {
-                tasks = JSON.parse(savedTasks);
-                renderTasks();
-            }
-        }
-
-        // Call loadTasks() when the page loads
-        window.addEventListener('load', loadTasks);
-
-        // Call saveTasks() whenever you modify the tasks array
+        window.addEventListener('load', () => {
+            currentUser = localStorage.getItem('currentUser');
+            checkUser();
+        });
     </script>
 </body>
 </html>
