@@ -7,8 +7,6 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&family=Raleway:wght@600&display=swap');
 
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&family=Raleway:wght@600&display=swap');
-
         :root {
           --primary: #FF69B4;
           --secondary: #FFC0CB;
@@ -101,7 +99,7 @@
           margin-bottom: 15px;
         }
 
-        button, #csvLabel {
+        button, .small-button {
           background: var(--primary);
           color: var(--white);
           border: none;
@@ -114,18 +112,13 @@
           -webkit-tap-highlight-color: transparent;
         }
 
-        button:hover, #csvLabel:hover {
+        button:hover, .small-button:hover {
           background: #FF1493;
           transform: translateY(-2px);
         }
 
-        button:active, #csvLabel:active {
+        button:active, .small-button:active {
           transform: translateY(1px);
-        }
-
-        .small-button {
-          padding: 8px 12px;
-          font-size: 14px;
         }
 
         #csvInput {
@@ -228,7 +221,7 @@
           .search-bar,
           .input-group input,
           button,
-          #csvLabel {
+          .small-button {
             font-size: 16px;
             padding: 10px 15px;
           }
@@ -245,7 +238,6 @@
             padding: 8px 10px;
             font-size: 12px;
           }
-
         }
     </style>
 </head>
@@ -265,6 +257,7 @@
         <div id="taskList"></div>
         <label for="csvInput" id="csvLabel" class="small-button">Import XLSX</label>
         <input type="file" id="csvInput" accept=".xlsx">
+        <button onclick="exportXLSX()" class="small-button">Export to XLSX</button>
         <button onclick="clearStorage()" class="small-button">Clear Storage</button>
     </div>
 
@@ -295,6 +288,13 @@
             overallProgressText.textContent = `${Math.floor(totalMinutes / 60)}/${goal / 60}`;
         }
 
+        function updateOverallProgress() {
+            const totalMinutes = tasks.reduce((sum, task) => sum + task.timeSpent, 0);
+            const progressPercentage = Math.min((totalMinutes / goal) * 100, 100);
+            overallProgress.style.width = progressPercentage + '%';
+            overallProgressText.textContent = `${Math.floor(totalMinutes / 60)}/${goal / 60}`;
+        }
+
         function renderTasks() {
             const searchQuery = searchInput.value.toLowerCase();
             taskList.innerHTML = '';
@@ -310,7 +310,7 @@
                             <button onclick="deleteTask(${index})">Delete</button>
                         </div>
                     </div>
-                    <p>Time Spent: ${task.timeSpent} minutes</p>
+                    <p> ${task.timeSpent} minutes</p>
                     <div class="progress-bar">
                         <div class="progress" style="width: ${progressPercentage}%"></div>
                         <div class="progress-text">${task.progress}/${task.goal}</div>
@@ -412,6 +412,13 @@
                 renderTasks();
             };
             reader.readAsArrayBuffer(file);
+        }
+
+        function exportXLSX() {
+            const worksheet = XLSX.utils.json_to_sheet(tasks);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Tasks');
+            XLSX.writeFile(workbook, 'tasks.xlsx');
         }
 
         addTaskButton.addEventListener('click', addTask);
