@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1000 Hours</title>
-    
-    <!-- Apple specific meta tags -->
+    <title>🌲 1000 Hours</title>
+    <link rel="apple-touch-icon" href="logo.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Cool Task Tracker">
+    <meta name="apple-mobile-web-app-title" content="1000 Hours">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&family=Raleway:wght@600&display=swap');
 
@@ -47,7 +46,6 @@
           margin-bottom: 1.5rem;
           font-weight: 700;
         }
-
 
         .overall-progress-bar {
           height: 12px;
@@ -182,7 +180,7 @@
           justify-content: center;
           align-items: center;
           font-size: 10px;
-          color: var(--text);
+          color: var (--text);
           font-weight: 600;
         }
 
@@ -294,13 +292,6 @@
             overallProgressText.textContent = `${Math.floor(totalMinutes / 60)}/${goal / 60}`;
         }
 
-        function updateOverallProgress() {
-            const totalMinutes = tasks.reduce((sum, task) => sum + task.timeSpent, 0);
-            const progressPercentage = Math.min((totalMinutes / goal) * 100, 100);
-            overallProgress.style.width = progressPercentage + '%';
-            overallProgressText.textContent = `${Math.floor(totalMinutes / 60)}/${goal / 60}`;
-        }
-
         function renderTasks() {
             const searchQuery = searchInput.value.toLowerCase();
             taskList.innerHTML = '';
@@ -316,7 +307,7 @@
                             <button onclick="deleteTask(${index})">Delete</button>
                         </div>
                     </div>
-                    <p> ${task.timeSpent} minutes</p>
+                    <p>${task.timeSpent} minutes</p>
                     <div class="progress-bar">
                         <div class="progress" style="width: ${progressPercentage}%"></div>
                         <div class="progress-text">${task.progress}/${task.goal}</div>
@@ -446,4 +437,3 @@
         window.addEventListener('load', loadTasks);
     </script>
 </body>
-</html>
