@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌲 1000 Hours</title>
-    <link rel="apple-touch-icon" href="logo.png">
+    <title>1000 Hours</title>
+    <link rel="apple-touch-icon" href="path/to/your/logo.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="1000 Hours">
@@ -48,7 +48,7 @@
         }
 
         .overall-progress-bar {
-          height: 12px;
+          height: 16px;
           background: var(--secondary);
           border-radius: 6px;
           overflow: hidden;
@@ -99,7 +99,10 @@
         .input-group {
           display: flex;
           flex-direction: column;
-          gap: 10px;
+          margin-bottom: 15px;
+        }
+
+        .input-group input {
           margin-bottom: 15px;
         }
 
@@ -180,7 +183,7 @@
           justify-content: center;
           align-items: center;
           font-size: 10px;
-          color: var (--text);
+          color: var(--text);
           font-weight: 600;
         }
 
@@ -207,6 +210,13 @@
           display: flex;
           flex-direction: column;
           gap: 10px;
+        }
+
+        .button-group {
+          display: flex;
+          justify-content: center;
+          gap: 10px;
+          margin-top: 20px;
         }
 
         @media (max-width: 480px) {
@@ -259,10 +269,12 @@
             <button id="addTask">Add</button>
         </div>
         <div id="taskList"></div>
-        <label for="csvInput" id="csvLabel" class="small-button">Import</label>
-        <input type="file" id="csvInput" accept=".xlsx">
-        <button onclick="exportXLSX()" class="small-button">Export</button>
-        <button onclick="clearStorage()" class="small-button">Clear</button>
+        <div class="button-group">
+            <label for="csvInput" id="csvLabel" class="small-button">Import</label>
+            <input type="file" id="csvInput" accept=".xlsx">
+            <button onclick="exportXLSX()" class="small-button">Export</button>
+            <button onclick="clearStorage()" class="small-button">Clear</button>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
