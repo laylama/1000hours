@@ -156,6 +156,7 @@
           font-size: 18px;
           font-weight: 600;
           color: var(--primary);
+          cursor: pointer;
         }
 
         .progress-bar {
@@ -210,7 +211,7 @@
           display: flex;
           flex-direction: column;
           gap: 10px;
-          margin-top: 15px; /* 添加间距 */
+          margin-top: 15px;
         }
 
         .button-group {
@@ -308,38 +309,40 @@
         function renderTasks() {
             const searchQuery = searchInput.value.toLowerCase();
             taskList.innerHTML = '';
-            tasks.filter(task => task.name.toLowerCase().includes(searchQuery)).forEach((task, index) => {
-                const progressPercentage = task.goal > 0 ? (task.progress / task.goal) * 100 : 0;
-                const taskElement = document.createElement('div');
-                taskElement.className = 'task';
-                taskElement.innerHTML = `
-                    <div class="task-header">
-                        <span class="task-title">${task.name}</span>
-                        <div class="task-buttons">
-                            <button onclick="toggleEditForm(${index})">Edit</button>
-                            <button onclick="deleteTask(${index})">Delete</button>
+            tasks.forEach((task, index) => {
+                if (task.name.toLowerCase().includes(searchQuery)) {
+                    const progressPercentage = task.goal > 0 ? (task.progress / task.goal) * 100 : 0;
+                    const taskElement = document.createElement('div');
+                    taskElement.className = 'task';
+                    taskElement.innerHTML = `
+                        <div class="task-header">
+                            <span class="task-title">${task.name}</span>
+                            <div class="task-buttons">
+                                <button onclick="toggleEditForm(${index})">Edit</button>
+                                <button onclick="deleteTask(${index})">Delete</button>
+                            </div>
                         </div>
-                    </div>
-                    <p>${task.timeSpent} minutes</p>
-                    <div class="progress-bar">
-                        <div class="progress" style="width: ${progressPercentage}%"></div>
-                        <div class="progress-text">${task.progress}/${task.goal}</div>
-                    </div>
-                    <div class="increment-buttons">
-                        <button class="small-button" onclick="incrementTime(${index}, 1)">+1 Min</button>
-                        <button class="small-button" onclick="incrementTime(${index}, 5)">+5 Min</button>
-                        <button class="small-button" onclick="incrementTime(${index}, 10)">+10 Min</button>
-                        <button class="small-button" onclick="incrementProgress(${index})">+1 Prog</button>
-                    </div>
-                    <div class="edit-form" id="editForm${index}" style="display: none;">
-                        <input type="text" id="editName${index}" value="${task.name}">
-                        <input type="number" id="editGoal${index}" value="${task.goal}">
-                        <input type="number" id="editProgress${index}" value="${task.progress}">
-                        <input type="number" id="editTime${index}" value="${task.timeSpent}">
-                        <button class="small-button" onclick="saveEdit(${index})">Save</button>
-                    </div>
-                `;
-                taskList.appendChild(taskElement);
+                        <p>${task.timeSpent} minutes</p>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: ${progressPercentage}%"></div>
+                            <div class="progress-text">${task.progress}/${task.goal}</div>
+                        </div>
+                        <div class="increment-buttons">
+                            <button class="small-button" onclick="incrementTime(${index}, 1)">+1 Min</button>
+                            <button class="small-button" onclick="incrementTime(${index}, 5)">+5 Min</button>
+                            <button class="small-button" onclick="incrementTime(${index}, 10)">+10 Min</button>
+                            <button class="small-button" onclick="incrementProgress(${index})">+1 Prog</button>
+                        </div>
+                        <div class="edit-form" id="editForm${index}" style="display: none;">
+                            <input type="text" id="editName${index}" value="${task.name}">
+                            <input type="number" id="editGoal${index}" value="${task.goal}">
+                            <input type="number" id="editProgress${index}" value="${task.progress}">
+                            <input type="number" id="editTime${index}" value="${task.timeSpent}">
+                            <button class="small-button" onclick="saveEdit(${index})">Save</button>
+                        </div>
+                    `;
+                    taskList.appendChild(taskElement);
+                }
             });
             updateOverallProgress();
         }
@@ -385,15 +388,17 @@
         }
 
         function incrementProgress(index) {
-            const task = tasks[index];
-            task.progress++;
+            const updatedTask = tasks.splice(index, 1)[0];
+            updatedTask.progress++;
+            tasks.unshift(updatedTask);
             saveTasks();
             renderTasks();
         }
 
         function incrementTime(index, minutes) {
-            const task = tasks[index];
-            task.timeSpent += minutes;
+            const updatedTask = tasks.splice(index, 1)[0];
+            updatedTask.timeSpent += minutes;
+            tasks.unshift(updatedTask);
             saveTasks();
             renderTasks();
         }
@@ -450,3 +455,4 @@
         window.addEventListener('load', loadTasks);
     </script>
 </body>
+</html>
