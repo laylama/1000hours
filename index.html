@@ -273,6 +273,34 @@
             font-size: 12px;
           }
         }
+        .weekly-progress-bar {
+            height: 18px;
+            background: var(--light-gray);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .weekly-progress {
+            height: 100%;
+            background: linear-gradient(45deg, var(--light-blue), var(--pale-yellow));
+            transition: width 0.3s ease;
+        }
+
+        .weekly-progress-text {
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+            color: var(--text);
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -281,6 +309,10 @@
         <div class="overall-progress-bar">
             <div class="overall-progress" id="overallProgress"></div>
             <div class="overall-progress-text" id="overallProgressText">0/1000</div>
+        </div>
+        <div class="weekly-progress-bar">
+            <div class="weekly-progress" id="weeklyProgress"></div>
+            <div class="weekly-progress-text" id="weeklyProgressText">0/21</div>
         </div>
         <input type="text" id="searchInput" class="search-bar" placeholder="Search tasks...">
         <div class="input-group">
@@ -300,7 +332,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
     <script>
         const goal = 1000 * 60; // 1000 hours in minutes
+        const weeklyGoal = 21 * 60; // 21 hours in minutes
         let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let weeklyProgress = JSON.parse(localStorage.getItem('weeklyProgress')) || { startDate: null, minutes: 0 };
         const taskInput = document.getElementById('taskInput');
         const taskGoal = document.getElementById('taskGoal');
         const addTaskButton = document.getElementById('addTask');
@@ -308,13 +342,28 @@
         const csvInput = document.getElementById('csvInput');
         const overallProgress = document.getElementById('overallProgress');
         const overallProgressText = document.getElementById('overallProgressText');
+        const weeklyProgressBar = document.getElementById('weeklyProgress');
+        const weeklyProgressText = document.getElementById('weeklyProgressText');
         const searchInput = document.getElementById('searchInput');
 
         function clearStorage() {
             localStorage.removeItem('tasks');
+            localStorage.removeItem('weeklyProgress');
             tasks = [];
+            weeklyProgress = { startDate: null, minutes: 0 };
             renderTasks();
-            updateOverallProgress();
+        }
+
+        function calculateWeeklyTime() {
+            const now = new Date();
+            const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
+            return tasks.reduce((sum, task) => {
+                // Assuming each task has a 'lastUpdated' property
+                if (new Date(task.lastUpdated) >= weekStart) {
+                    return sum + task.timeSpent;
+                }
+                return sum;
+            }, 0);
         }
 
         function updateOverallProgress() {
@@ -322,6 +371,18 @@
             const progressPercentage = Math.min((totalMinutes / goal) * 100, 100);
             overallProgress.style.width = progressPercentage + '%';
             overallProgressText.textContent = `${Math.floor(totalMinutes / 60)}/${goal / 60}`;
+        }
+
+        function updateWeeklyProgress() {
+            const now = new Date();
+            if (!weeklyProgress.startDate || now - new Date(weeklyProgress.startDate) > 7 * 24 * 60 * 60 * 1000) {
+                weeklyProgress = { startDate: now.toISOString(), minutes: 0 };
+            }
+            weeklyProgress.minutes = calculateWeeklyTime();
+            const progressPercentage = Math.min((weeklyProgress.minutes / weeklyGoal) * 100, 100);
+            weeklyProgressBar.style.width = `${progressPercentage}%`;
+            weeklyProgressText.textContent = `${Math.floor(weeklyProgress.minutes / 60)}/${weeklyGoal / 60}`;
+            localStorage.setItem('weeklyProgress', JSON.stringify(weeklyProgress));
         }
 
         function renderTasks() {
@@ -363,13 +424,15 @@
                 }
             });
             updateOverallProgress();
+            updateWeeklyProgress();
         }
+
 
         function addTask() {
             const name = taskInput.value.trim();
             const goal = parseInt(taskGoal.value) || 0;
             if (name) {
-                tasks.unshift({ name, timeSpent: 0, goal, progress: 0 });
+                tasks.unshift({ name, timeSpent: 0, goal, progress: 0, lastUpdated: new Date().toISOString() });
                 taskInput.value = '';
                 taskGoal.value = '';
                 saveTasks();
@@ -416,6 +479,7 @@
         function incrementTime(index, minutes) {
             const updatedTask = tasks.splice(index, 1)[0];
             updatedTask.timeSpent += minutes;
+            updatedTask.lastUpdated = new Date().toISOString(); // Add this line
             tasks.unshift(updatedTask);
             saveTasks();
             renderTasks();
@@ -423,6 +487,7 @@
 
         function saveTasks() {
             localStorage.setItem('tasks', JSON.stringify(tasks));
+            localStorage.setItem('weeklyProgress', JSON.stringify(weeklyProgress));
         }
 
         function importXLSX(event) {
@@ -469,10 +534,15 @@
 
         function loadTasks() {
             const savedTasks = localStorage.getItem('tasks');
+            const savedWeeklyProgress = localStorage.getItem('weeklyProgress');
             if (savedTasks) {
                 tasks = JSON.parse(savedTasks);
-                renderTasks();
             }
+            if (savedWeeklyProgress) {
+                weeklyProgress = JSON.parse(savedWeeklyProgress);
+            }
+            updateWeeklyProgress(); // Add this line
+            renderTasks();
         }
 
         // Call loadTasks() when the page loads
