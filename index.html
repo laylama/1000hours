@@ -301,9 +301,22 @@
             color: var(--text);
             font-weight: 600;
         }
+        #congratsMessage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            z-index: 1000;
+            display: none;
+        }
     </style>
 </head>
 <body>
+    <div id="congratsMessage" role="alert"></div>
     <div class="container">
         <h1>🌲 1000 Hours</h1>
         <div class="overall-progress-bar">
@@ -330,11 +343,14 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script>
         const goal = 1000 * 60; // 1000 hours in minutes
         const weeklyGoal = 21 * 60; // 21 hours in minutes
         let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
         let weeklyProgress = JSON.parse(localStorage.getItem('weeklyProgress')) || { startDate: null, minutes: 0 };
+        let lastWeeklyCongrats = JSON.parse(localStorage.getItem('lastWeeklyCongrats')) || null;
+        let lastCelebratedMilestone = parseInt(localStorage.getItem('lastCelebratedMilestone')) || 0;
         const taskInput = document.getElementById('taskInput');
         const taskGoal = document.getElementById('taskGoal');
         const addTaskButton = document.getElementById('addTask');
@@ -345,25 +361,29 @@
         const weeklyProgressBar = document.getElementById('weeklyProgress');
         const weeklyProgressText = document.getElementById('weeklyProgressText');
         const searchInput = document.getElementById('searchInput');
+        const congratsMessage = document.getElementById('congratsMessage');
 
         function clearStorage() {
             localStorage.removeItem('tasks');
             localStorage.removeItem('weeklyProgress');
+            localStorage.removeItem('lastCelebratedMilestone');
+            localStorage.removeItem('lastWeeklyCongrats');
             tasks = [];
             weeklyProgress = { startDate: null, minutes: 0 };
+            lastCelebratedMilestone = 0;
+            lastWeeklyCongrats = null;
             renderTasks();
         }
 
-        function calculateWeeklyTime() {
-            const now = new Date();
-            const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
-            return tasks.reduce((sum, task) => {
-                // Assuming each task has a 'lastUpdated' property
-                if (new Date(task.lastUpdated) >= weekStart) {
-                    return sum + task.timeSpent;
-                }
-                return sum;
-            }, 0);
+        function shouldResetWeeklyProgress(currentDate, lastResetDate) {
+            if (!lastResetDate) return true;
+            
+            const lastResetDay = new Date(lastResetDate).getDay();
+            const currentDay = currentDate.getDay();
+            
+            // If it's Monday (1) and the last reset wasn't on a Monday, or if more than 7 days have passed
+            return (currentDay === 1 && lastResetDay !== 1) || 
+                   (currentDate - new Date(lastResetDate) > 7 * 24 * 60 * 60 * 1000);
         }
 
         function updateOverallProgress() {
@@ -371,18 +391,70 @@
             const progressPercentage = Math.min((totalMinutes / goal) * 100, 100);
             overallProgress.style.width = progressPercentage + '%';
             overallProgressText.textContent = `${Math.floor(totalMinutes / 60)}/${goal / 60}`;
+            
+            // Check for milestones
+            const hours = Math.floor(totalMinutes / 60);
+            const milestone = Math.floor(hours / 10) * 10;
+            if (milestone > lastCelebratedMilestone) {
+                showCongratulation(milestone);
+                lastCelebratedMilestone = milestone;
+                localStorage.setItem('lastCelebratedMilestone', lastCelebratedMilestone);
+            }
+        }
+
+        function showCongratulation(hours) {
+            congratsMessage.textContent = `Congratulations! You've reached ${hours} hours!`;
+            congratsMessage.style.display = 'block';
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+            setTimeout(() => {
+                congratsMessage.style.display = 'none';
+            }, 5000);
         }
 
         function updateWeeklyProgress() {
             const now = new Date();
-            if (!weeklyProgress.startDate || now - new Date(weeklyProgress.startDate) > 7 * 24 * 60 * 60 * 1000) {
-                weeklyProgress = { startDate: now.toISOString(), minutes: 0 };
+            if (shouldResetWeeklyProgress(now, weeklyProgress.startDate)) {
+                resetWeeklyProgress(now);
             }
-            weeklyProgress.minutes = calculateWeeklyTime();
             const progressPercentage = Math.min((weeklyProgress.minutes / weeklyGoal) * 100, 100);
-            weeklyProgressBar.style.width = `${progressPercentage}%`;
+            weeklyProgressBar.style.width = progressPercentage + '%';
             weeklyProgressText.textContent = `${Math.floor(weeklyProgress.minutes / 60)}/${weeklyGoal / 60}`;
             localStorage.setItem('weeklyProgress', JSON.stringify(weeklyProgress));
+
+            // Check if weekly goal is achieved and congratulation hasn't been shown this week
+            if (weeklyProgress.minutes >= weeklyGoal && (!lastWeeklyCongrats || shouldResetWeeklyProgress(now, lastWeeklyCongrats))) {
+                showWeeklyGoalAchieved();
+                lastWeeklyCongrats = now.toISOString();
+                localStorage.setItem('lastWeeklyCongrats', JSON.stringify(lastWeeklyCongrats));
+            }
+        }
+
+        function resetWeeklyProgress(now) {
+            const monday = new Date(now);
+            monday.setDate(now.getDate() - now.getDay() + 1); // Set to Monday
+            monday.setHours(0, 0, 0, 0); // Set to 00:00:00
+
+            weeklyProgress = { startDate: monday.toISOString(), minutes: 0 };
+            lastWeeklyCongrats = null;
+            localStorage.setItem('weeklyProgress', JSON.stringify(weeklyProgress));
+            localStorage.setItem('lastWeeklyCongrats', JSON.stringify(lastWeeklyCongrats));
+        }
+
+        function showWeeklyGoalAchieved() {
+            congratsMessage.textContent = "Congratulations! You've achieved your weekly goal of 21 hours!";
+            congratsMessage.style.display = 'block';
+            confetti({
+                particleCount: 200,
+                spread: 90,
+                origin: { y: 0.6 }
+            });
+            setTimeout(() => {
+                congratsMessage.style.display = 'none';
+            }, 5000);
         }
 
         function renderTasks() {
@@ -479,11 +551,12 @@
         function incrementTime(index, minutes) {
             const updatedTask = tasks.splice(index, 1)[0];
             updatedTask.timeSpent += minutes;
-            updatedTask.lastUpdated = new Date().toISOString(); // Add this line
             tasks.unshift(updatedTask);
+            weeklyProgress.minutes += minutes;
             saveTasks();
             renderTasks();
         }
+
 
         function saveTasks() {
             localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -535,13 +608,25 @@
         function loadTasks() {
             const savedTasks = localStorage.getItem('tasks');
             const savedWeeklyProgress = localStorage.getItem('weeklyProgress');
+            const savedLastCelebratedMilestone = localStorage.getItem('lastCelebratedMilestone');
+            const savedLastWeeklyCongrats = localStorage.getItem('lastWeeklyCongrats');
             if (savedTasks) {
                 tasks = JSON.parse(savedTasks);
             }
             if (savedWeeklyProgress) {
                 weeklyProgress = JSON.parse(savedWeeklyProgress);
+                if (shouldResetWeeklyProgress(new Date(), weeklyProgress.startDate)) {
+                    resetWeeklyProgress(new Date());
+                }
+            } else {
+                resetWeeklyProgress(new Date());
             }
-            updateWeeklyProgress(); // Add this line
+            if (savedLastCelebratedMilestone) {
+                lastCelebratedMilestone = parseInt(savedLastCelebratedMilestone);
+            }
+            if (savedLastWeeklyCongrats) {
+                lastWeeklyCongrats = JSON.parse(savedLastWeeklyCongrats);
+            }
             renderTasks();
         }
 
