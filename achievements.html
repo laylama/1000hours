@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏆 Achievement Wall - 1000 Hours</title>
+    <link rel="apple-touch-icon" href="logo2.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="1000 Hours">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&family=Raleway:wght@600&display=swap');
+
+        :root {
+          --salmon: #F79F77;
+          --light-blue: #80BEF5;
+          --pale-yellow: #F6D58A;
+          --black: #010101;
+          --white: #FFFFFF;
+          --light-gray: #F5F5F5;
+        }
+
+        body {
+          font-family: 'Raleway', sans-serif;
+          color: var(--black);
+          line-height: 1.6;
+          padding: 20px;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          background-color: var(--white);
+        }
+
+        .container {
+          max-width: 100%;
+          margin: 0 auto;
+          background: var(--white);
+          border-radius: 20px;
+          padding: 25px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+          position: relative;
+        }
+
+        h1 {
+          font-size: 40px;
+          color: var(--primary);
+          text-align: center;
+          margin-bottom: 1.5rem;
+          font-weight: 700;
+        }
+
+        .corner-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+            background-color: var(--black);
+            color: var(--white);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .corner-button:hover {
+            background-color: var(--salmon);
+            transform: translateY(-2px);
+        }
+
+        .corner-button:active {
+            transform: translateY(1px);
+        }
+
+        .achievement {
+            background: var(--light-gray);
+            border: 1.5px solid var(--secondary);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .achievement:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .achievement-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--black);
+            margin-bottom: 10px;
+        }
+
+        .achievement-details {
+            font-size: 14px;
+            color: var(--text);
+        }
+
+        @media (max-width: 480px) {
+          body {
+            padding: 10px;
+          }
+
+          .container {
+            padding: 20px;
+          }
+
+          h1 {
+            font-size: 24px;
+          }
+
+          .corner-button {
+            font-size: 12px;
+            padding: 6px 12px;
+          }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="corner-button" onclick="location.href='index.html'">Back to Tasks</button>
+        <h1>🏆 Achievement Wall</h1>
+        <div id="achievementList"></div>
+    </div>
+
+    <script>
+        function loadAchievements() {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const achievementList = document.getElementById('achievementList');
+            achievementList.innerHTML = '';
+
+            const completedTasks = tasks.filter(task => task.progress >= task.goal && task.goal > 0);
+
+            if (completedTasks.length === 0) {
+                achievementList.innerHTML = '<p>No achievements yet. Keep working on your tasks!</p>';
+                return;
+            }
+
+            completedTasks.forEach(task => {
+                const achievementElement = document.createElement('div');
+                achievementElement.className = 'achievement';
+                achievementElement.innerHTML = `
+                    <div class="achievement-title">${task.name}</div>
+                    <div class="achievement-details">
+                        <p>Goal: ${task.goal}</p>
+                        <p>Progress: ${task.progress}</p>
+                        <p>Time Spent: ${task.timeSpent} minutes</p>
+                    </div>
+                `;
+                achievementList.appendChild(achievementElement);
+            });
+        }
+
+        window.addEventListener('load', loadAchievements);
+    </script>
+</body>
+</html>
