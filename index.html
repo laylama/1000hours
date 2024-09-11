@@ -27,7 +27,7 @@
             padding: 5px 10px;
             font-size: 12px;
             background-color: var(--white);
-            color: var(--white);
+            color: var(--black);
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -37,7 +37,6 @@
         .corner-button:hover {
             background-color: var(--light-blue);
         }
-
 
         body {
           font-family: 'Raleway', sans-serif;
@@ -50,7 +49,7 @@
         }
 
         .container {
-          max-width: 100%;
+          max-width: 1000px;
           margin: 0 auto;
           background: var(--white);
           border-radius: 20px;
@@ -60,13 +59,13 @@
 
         h1 {
           font-size: 40px;
-          color: var(--primary);
+          color: var(--black);
           text-align: center;
           margin-bottom: 1.5rem;
           font-weight: 700;
         }
 
-        .overall-progress-bar {
+        .overall-progress-bar, .weekly-progress-bar {
           height: 18px;
           background: var(--light-gray);
           border-radius: 6px;
@@ -75,13 +74,13 @@
           position: relative;
         }
 
-        .overall-progress {
+        .overall-progress, .weekly-progress {
           height: 100%;
           background: linear-gradient(45deg, var(--salmon), var(--light-blue), var(--pale-yellow));
           transition: width 0.3s ease;
         }
 
-        .overall-progress-text {
+        .overall-progress-text, .weekly-progress-text {
           position: absolute;
           width: 100%;
           top: 0;
@@ -91,7 +90,7 @@
           justify-content: center;
           align-items: center;
           font-size: 10px;
-          color: var(--text);
+          color: var(--black);
           font-weight: 600;
         }
 
@@ -153,7 +152,7 @@
 
         .task {
           background: var(--light-gray);
-          border: 1.5px solid var(--secondary);
+          border: none;
           border-radius: 15px;
           padding: 20px;
           margin-bottom: 20px;
@@ -181,7 +180,7 @@
         .progress-bar {
           position: relative;
           height: 16px;
-          background: var(--secondary);
+          background: var(--white);
           border-radius: 8px;
           overflow: hidden;
           margin: 15px 0;
@@ -206,7 +205,6 @@
           color: var(--black);
           font-weight: 600;
         }
-
 
         .task-buttons button {
           background: var(--salmon);
@@ -234,7 +232,7 @@
 
         .time-spent {
           font-size: 12px;
-          color: var(--text);
+          color: var(--black);
           margin-bottom: 10px;
         }
 
@@ -251,7 +249,6 @@
           gap: 10px;
           margin-top: 20px;
         }
-
 
         .button-group button {
           background: var(--pale-yellow);
@@ -317,7 +314,7 @@
             justify-content: center;
             align-items: center;
             font-size: 10px;
-            color: var(--text);
+            color: var(--black);
             font-weight: 600;
         }
         #congratsMessage {
@@ -337,11 +334,8 @@
 <body>
     <div id="congratsMessage" role="alert"></div>
     <div class="container">
-        <!-- Add this new button -->
         <button class="corner-button" onclick="location.href='achievements.html'">🏆</button>
-    <div class="container">
         <h1>🌲 1000 Hours</h1>
-        <!-- Add this new navigation button -->
         <div class="overall-progress-bar">
             <div class="overall-progress" id="overallProgress"></div>
             <div class="overall-progress-text" id="overallProgressText">0/1000</div>
