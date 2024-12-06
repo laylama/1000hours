@@ -1,654 +1,677 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌲 1000 Hours</title>
-    <link rel="apple-touch-icon" href="logo2.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="1000 Hours">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&family=Raleway:wght@600&display=swap');
-
-        :root {
-          --salmon: #F79F77;
-          --light-blue: #80BEF5;
-          --pale-yellow: #F6D58A;
-          --black: #010101;
-          --white: #FFFFFF;
-          --light-gray: #F5F5F5;
-        }
-
-        .corner-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 5px 10px;
-            font-size: 12px;
-            background-color: transparent;
-            color: var(--black);
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .corner-button:hover {
-            background-color: rgba(128, 190, 245, 0.2); /* Light blue with opacity */
-        }
-
-        body {
-          font-family: 'Raleway', sans-serif;
-          color: var(--black);
-          line-height: 1.6;
-          padding: 20px;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-          background-color: var(--white);
-        }
-
-        .container {
-          max-width: 1000px;
-          margin: 0 auto;
-          background: var(--white);
-          border-radius: 20px;
-          padding: 25px;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-          font-size: 40px;
-          color: var(--black);
-          text-align: center;
-          margin-bottom: 1.5rem;
-          font-weight: 700;
-        }
-
-        .overall-progress-bar, .weekly-progress-bar {
-          height: 18px;
-          background: var(--light-gray);
-          border-radius: 6px;
-          overflow: hidden;
-          margin-bottom: 1.5rem;
-          position: relative;
-        }
-
-        .overall-progress, .weekly-progress {
-          height: 100%;
-          background: linear-gradient(45deg, var(--salmon), var(--light-blue), var(--pale-yellow));
-          transition: width 0.3s ease;
-        }
-
-        .overall-progress-text, .weekly-progress-text {
-          position: absolute;
-          width: 100%;
-          top: 0;
-          left: 0;
-          height: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-size: 10px;
-          color: var(--black);
-          font-weight: 600;
-        }
-
-        .search-bar,
-        .input-group input {
-          width: calc(100% - 2rem);
-          padding: 12px 15px;
-          border: 2px solid var(--light-blue);
-          border-radius: 10px;
-          font-size: 16px;
-          margin-bottom: 15px;
-          transition: all 0.3s ease;
-          -webkit-appearance: none;
-          appearance: none;
-        }
-
-        .search-bar:focus,
-        .input-group input:focus {
-          outline: none;
-          border-color: var(--salmon);
-          box-shadow: 0 0 0 3px rgba(247, 159, 119, 0.2);
-        }
-
-        .input-group {
-          display: flex;
-          flex-direction: column;
-          margin-bottom: 15px;
-        }
-
-        .input-group input {
-          margin-bottom: 15px;
-        }
-
-        button, .small-button {
-          background: var(--black);
-          color: var(--white);
-          border: none;
-          padding: 12px 20px;
-          border-radius: 10px;
-          font-size: 16px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          -webkit-tap-highlight-color: transparent;
-        }
-
-        button:hover, .small-button:hover {
-          background: var(--salmon);
-          transform: translateY(-2px);
-        }
-
-        button:active, .small-button:active {
-          transform: translateY(1px);
-        }
-
-        #csvInput {
-          display: none;
-        }
-
-        .task {
-          background: var(--light-gray);
-          border: none;
-          border-radius: 15px;
-          padding: 20px;
-          margin-bottom: 20px;
-          transition: all 0.3s ease;
-        }
-
-        .task:hover {
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .task-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 15px;
-        }
-
-        .task-title {
-          font-size: 20px;
-          font-weight: 600;
-          color: var(--black);
-          cursor: pointer;
-        }
-
-        .progress-bar {
-          position: relative;
-          height: 16px;
-          background: var(--white);
-          border-radius: 8px;
-          overflow: hidden;
-          margin: 15px 0;
-        }
-
-        .progress {
-          height: 100%;
-          background: linear-gradient(45deg, var(--salmon), var(--light-blue), var(--pale-yellow));
-          transition: width 0.3s ease;
-        }
-
-        .progress-text {
-          position: absolute;
-          width: 100%;
-          top: 0;
-          left: 0;
-          height: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-size: 10px;
-          color: var(--black);
-          font-weight: 600;
-        }
-
-        .task-buttons button {
-          background: var(--salmon);
-          color: var(--white);
-          padding: 8px 12px;
-          font-size: 14px;
-        }
-
-        .task-buttons button:hover {
-          background: var(--salmon);
-        }
-
-        .task-buttons, .time-buttons, .increment-buttons {
-          display: flex;
-          gap: 10px;
-          flex-wrap: wrap;
-        }
-
-        .task-buttons button, .time-buttons button, .increment-buttons button {
-          padding: 8px 12px;
-          font-size: 12px;
-          flex: 1;
-          min-width: 70px;
-        }
-
-        .time-spent {
-          font-size: 12px;
-          color: var(--black);
-          margin-bottom: 10px;
-        }
-
-        .edit-form {
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-          margin-top: 15px;
-        }
-
-        .button-group {
-          display: flex;
-          justify-content: center;
-          gap: 10px;
-          margin-top: 20px;
-        }
-
-        .button-group button {
-          background: var(--pale-yellow);
-          color: var(--black);
-        }
-
-        @media (max-width: 480px) {
-          body {
-            padding: 10px;
-          }
-
-          .container {
-            padding: 20px;
-          }
-
-          h1 {
-            font-size: 24px;
-          }
-
-          .search-bar,
-          .input-group input,
-          button,
-          .small-button {
-            font-size: 16px;
-            padding: 10px 15px;
-          }
-
-          .task-title {
-            font-size: 16px;
-          }
-
-          .task-buttons, .time-buttons, .increment-buttons {
-            justify-content: space-between;
-          }
-
-          .task-buttons button, .time-buttons button, .increment-buttons button {
-            padding: 8px 10px;
-            font-size: 12px;
-          }
-        }
-        .weekly-progress-bar {
-            height: 18px;
-            background: var(--light-gray);
-            border-radius: 6px;
-            overflow: hidden;
-            margin-bottom: 1.5rem;
-            position: relative;
-        }
-
-        .weekly-progress {
-            height: 100%;
-            background: linear-gradient(45deg, var(--light-blue), var(--pale-yellow));
-            transition: width 0.3s ease;
-        }
-
-        .weekly-progress-text {
-            position: absolute;
-            width: 100%;
-            top: 0;
-            left: 0;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 10px;
-            color: var(--black);
-            font-weight: 600;
-        }
-        #congratsMessage {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: #4CAF50;
-            color: white;
-            text-align: center;
-            padding: 10px;
-            z-index: 1000;
-            display: none;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌲 1000 Hours</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600&display=swap');
+:root {
+  --salmon: #F79F77;
+  --light-blue: #80BEF5;
+  --pale-yellow: #F6D58A;
+  --black: #010101;
+  --white: #FFFFFF;
+  --light-gray: #F5F5F5;
+}
+body {
+  font-family:'Raleway',sans-serif;color:var(--black);line-height:1.6;padding:20px;background-color:var(--white);
+}
+.container {
+  max-width:1000px;margin:0 auto;background:var(--white);border-radius:20px;padding:25px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.1);position:relative;
+}
+h1 {
+  font-size:40px;color:var(--black);text-align:center;margin-bottom:1.5rem;font-weight:700;
+}
+.corner-buttons {
+  position:absolute;top:10px;right:10px;display:flex;gap:10px;
+}
+.corner-button {
+  padding:5px 10px;font-size:12px;background-color:transparent;color:var(--black);
+  border:none;border-radius:5px;cursor:pointer;transition:background-color 0.3s ease;
+}
+.corner-button:hover {
+  background-color:rgba(128,190,245,0.2);
+}
+.goal-form, .task-form {
+  display:none;background:var(--light-gray);padding:10px;border-radius:10px;
+  position:absolute;top:40px;right:10px;z-index:999;
+}
+.goal-form input, .task-form input {
+  width:calc(100% - 2rem);padding:12px 15px;border:2px solid var(--light-blue);
+  border-radius:10px;font-size:16px;margin-bottom:15px;
+}
+.goal-form button,.task-form button {
+  background:var(--black);color:var(--white);border:none;padding:10px;border-radius:10px;
+  font-size:14px;font-weight:600;cursor:pointer;transition:all 0.3s ease;
+}
+.goal-form button:hover,.task-form button:hover {
+  background:var(--salmon);
+}
+.search-bar {
+  width:calc(100% - 2rem);padding:12px 15px;border:2px solid var(--light-blue);
+  border-radius:10px;font-size:16px;margin-bottom:15px;transition:all 0.3s ease;
+}
+button,.small-button {
+  background:var(--black);color:var(--white);border:none;padding:12px 20px;border-radius:10px;
+  font-size:16px;font-weight:600;cursor:pointer;transition:all 0.3s ease;
+}
+button:hover,.small-button:hover {background:var(--salmon);transform:translateY(-2px);}
+button:active,.small-button:active {transform:translateY(1px);}
+#csvInput {display:none;}
+.task {
+  background:var(--light-gray);border:none;border-radius:15px;padding:20px;margin-bottom:20px;transition:all 0.3s ease;
+}
+.task-header {
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;
+}
+.task-title {font-size:20px;font-weight:600;color:var(--black);}
+.progress-bar {
+  position:relative;height:16px;background:var(--white);border-radius:8px;overflow:hidden;margin:15px 0;
+}
+.progress {height:100%;background:linear-gradient(45deg,var(--salmon),var(--light-blue),var(--pale-yellow));}
+.progress-text {
+  position:absolute;width:100%;top:0;left:0;height:100%;display:flex;justify-content:center;align-items:center;font-size:10px;color:var(--black);font-weight:600;
+}
+.increment-buttons {display:flex;gap:10px;flex-wrap:wrap;}
+.increment-buttons button {padding:8px 12px;font-size:12px;flex:1;min-width:70px;}
+.edit-form {display:flex;flex-direction:column;gap:10px;margin-top:15px;}
+.tag-pill {
+  display:inline-block;background:var(--light-blue);color:var(--white);padding:3px 8px;border-radius:8px;
+  font-size:12px;font-weight:600;cursor:pointer;transition:background 0.3s;margin-right:5px;margin-bottom:5px;
+}
+.tag-pill.selected {background:var(--salmon);}
+#congratsMessage {
+  position:fixed;top:0;left:0;width:100%;background:#4CAF50;color:white;text-align:center;padding:10px;z-index:1000;display:none;
+}
+.goals-list {margin-bottom:20px;}
+.goals-list h2 {font-size:20px;margin-bottom:10px;font-weight:600;}
+.goals-scroll {display:flex;gap:20px;overflow-x:auto;white-space:nowrap;padding-bottom:10px;}
+.goal-card {background:var(--light-gray);border-radius:10px;padding:15px;min-width:200px;flex:0 0 auto;position:relative;}
+.goal-card h3 {font-size:16px;margin-bottom:10px;font-weight:600;color:var(--black);}
+.goal-progress-bar {position:relative;height:16px;background:var(--white);border-radius:8px;overflow:hidden;margin-bottom:10px;}
+.goal-progress {height:100%;background:linear-gradient(45deg,var(--salmon),var(--light-blue),var(--pale-yellow));transition:width 0.3s ease;}
+.goal-progress-text {
+  position:absolute;width:100%;top:0;left:0;height:100%;display:flex;justify-content:center;align-items:center;font-size:10px;color:var(--black);font-weight:600;
+}
+.edit-delete-btns {position:absolute;top:10px;right:10px;display:flex;gap:5px;}
+.edit-delete-btns button {
+  background:none;border:none;cursor:pointer;font-size:12px;color:var(--black);padding:3px 5px;border-radius:5px;
+}
+.edit-delete-btns button:hover {
+  background:var(--light-blue);color:var(--white);
+}
+</style>
 </head>
 <body>
-    <div id="congratsMessage" role="alert"></div>
-    <div class="container">
-        <button class="corner-button" onclick="location.href='achievements.html'">🏆</button>
-        <h1>🌲 1000 Hours</h1>
-        <div class="overall-progress-bar">
-            <div class="overall-progress" id="overallProgress"></div>
-            <div class="overall-progress-text" id="overallProgressText">0/1000</div>
-        </div>
-        <div class="weekly-progress-bar">
-            <div class="weekly-progress" id="weeklyProgress"></div>
-            <div class="weekly-progress-text" id="weeklyProgressText">0/21</div>
-        </div>
-        <input type="text" id="searchInput" class="search-bar" placeholder="Search tasks...">
-        <div class="input-group">
-            <input type="text" id="taskInput" placeholder="Enter a new task">
-            <input type="number" id="taskGoal" placeholder="Task goal">
-            <button id="addTask">Add</button>
-        </div>
-        <div id="taskList"></div>
-        <div class="button-group">
-            <label for="csvInput" id="csvLabel" class="small-button">Import</label>
-            <input type="file" id="csvInput" accept=".xlsx">
-            <button onclick="exportXLSX()" class="small-button">Export</button>
-            <button onclick="clearStorage()" class="small-button">Clear</button>
-        </div>
+<script>
+    let BIG_GOAL_NAME = "1000 Hours";
+    let GOAL_TOTAL_HOURS = 1000;
+    let GOAL_WEEKLY_HOURS = 21;
+</script>
+<div id="congratsMessage"></div>
+<div class="container">
+    <div class="corner-buttons">
+        <button class="corner-button" onclick="toggleGoalForm()">+ Goal</button>
+        <button class="corner-button" onclick="toggleTaskForm()">+ Task</button>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-    <script>
-        const goal = 1000 * 60; // 1000 hours in minutes
-        const weeklyGoal = 21 * 60; // 21 hours in minutes
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        let weeklyProgress = JSON.parse(localStorage.getItem('weeklyProgress')) || { startDate: null, minutes: 0 };
-        let lastWeeklyCongrats = JSON.parse(localStorage.getItem('lastWeeklyCongrats')) || null;
-        let lastCelebratedMilestone = parseInt(localStorage.getItem('lastCelebratedMilestone')) || 0;
-        const taskInput = document.getElementById('taskInput');
-        const taskGoal = document.getElementById('taskGoal');
-        const addTaskButton = document.getElementById('addTask');
-        const taskList = document.getElementById('taskList');
-        const csvInput = document.getElementById('csvInput');
-        const overallProgress = document.getElementById('overallProgress');
-        const overallProgressText = document.getElementById('overallProgressText');
-        const weeklyProgressBar = document.getElementById('weeklyProgress');
-        const weeklyProgressText = document.getElementById('weeklyProgressText');
-        const searchInput = document.getElementById('searchInput');
-        const congratsMessage = document.getElementById('congratsMessage');
+    <div class="goal-form" id="goalForm">
+        <input type="text" id="newGoalInput" placeholder="Enter new goal name">
+        <button onclick="createGoal()">Add</button>
+    </div>
 
-        function clearStorage() {
-            localStorage.removeItem('tasks');
-            localStorage.removeItem('weeklyProgress');
-            localStorage.removeItem('lastCelebratedMilestone');
-            localStorage.removeItem('lastWeeklyCongrats');
-            tasks = [];
-            weeklyProgress = { startDate: null, minutes: 0 };
-            lastCelebratedMilestone = 0;
-            lastWeeklyCongrats = null;
-            renderTasks();
-        }
+    <div class="task-form" id="taskForm">
+        <input type="text" id="newTaskName" placeholder="Enter new task name">
+        <input type="number" id="newTaskGoal" placeholder="Task goal (number)">
+        <p>Select Goals (Tags):</p>
+        <div id="newTaskGoalsContainer"></div>
+        <button onclick="addTask()">Add</button>
+    </div>
 
-        function shouldResetWeeklyProgress(currentDate, lastResetDate) {
-            if (!lastResetDate) return true;
-            
-            const lastResetDay = new Date(lastResetDate).getDay();
-            const currentDay = currentDate.getDay();
-            
-            // If it's Monday (1) and the last reset wasn't on a Monday, or if more than 7 days have passed
-            return (currentDay === 1 && lastResetDay !== 1) || 
-                   (currentDate - new Date(lastResetDate) > 7 * 24 * 60 * 60 * 1000);
-        }
+    <h1 id="bigGoalTitle"></h1>
 
-        function updateOverallProgress() {
-            const totalMinutes = tasks.reduce((sum, task) => sum + task.timeSpent, 0);
-            const progressPercentage = Math.min((totalMinutes / goal) * 100, 100);
-            overallProgress.style.width = progressPercentage + '%';
-            overallProgressText.textContent = `${Math.floor(totalMinutes / 60)}/${goal / 60}`;
-            
-            // Check for milestones
-            const hours = Math.floor(totalMinutes / 60);
-            const milestone = Math.floor(hours / 10) * 10;
-            if (milestone > lastCelebratedMilestone) {
-                showCongratulation(milestone);
-                lastCelebratedMilestone = milestone;
-                localStorage.setItem('lastCelebratedMilestone', lastCelebratedMilestone);
-            }
-        }
+    <div class="goals-list" style="display:none;">
+        <h2>Goals</h2>
+        <div class="goals-scroll" id="goalsContainer"></div>
+    </div>
 
-        function showCongratulation(hours) {
-            congratsMessage.textContent = `Congratulations! You've reached ${hours} hours!`;
-            congratsMessage.style.display = 'block';
-            confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.6 }
+    <input type="text" id="searchInput" class="search-bar" placeholder="Search tasks...">
+    <div id="taskList"></div>
+    <div class="button-group">
+        <label for="csvInput" id="csvLabel" class="small-button">Import</label>
+        <input type="file" id="csvInput" accept=".xlsx">
+        <button onclick="exportXLSX()" class="small-button">Export</button>
+        <button onclick="clearStorage()" class="small-button">Clear</button>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+<script>
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    let weeklyProgress = JSON.parse(localStorage.getItem('weeklyProgress')) || { startDate: null };
+    let goals = JSON.parse(localStorage.getItem('goals')) || {};
+
+    const newGoalInput = document.getElementById('newGoalInput');
+    const goalForm = document.getElementById('goalForm');
+    const taskForm = document.getElementById('taskForm');
+    const newTaskName = document.getElementById('newTaskName');
+    const newTaskGoal = document.getElementById('newTaskGoal');
+    const newTaskGoalsContainer = document.getElementById('newTaskGoalsContainer');
+    const searchInput = document.getElementById('searchInput');
+    const congratsMessage = document.getElementById('congratsMessage');
+    const goalsListDiv = document.querySelector('.goals-list');
+    const goalsContainer = document.getElementById('goalsContainer');
+    const csvInput = document.getElementById('csvInput');
+    const bigGoalTitle = document.getElementById('bigGoalTitle');
+
+    function toggleGoalForm() {
+        goalForm.style.display = (goalForm.style.display === 'none' || goalForm.style.display === '') ? 'block' : 'none';
+        taskForm.style.display = 'none'; 
+    }
+
+    function toggleTaskForm() {
+        taskForm.style.display = (taskForm.style.display === 'none' || taskForm.style.display === '') ? 'block' : 'none';
+        goalForm.style.display = 'none';
+
+        newTaskGoalsContainer.innerHTML = '';
+        const goalNames = Object.keys(goals);
+        if (goalNames.length > 0) {
+            goalNames.forEach(gName => {
+                const pill = document.createElement('span');
+                pill.className = 'tag-pill';
+                pill.textContent = gName;
+                pill.onclick = () => pill.classList.toggle('selected');
+                newTaskGoalsContainer.appendChild(pill);
             });
-            setTimeout(() => {
-                congratsMessage.style.display = 'none';
-            }, 5000);
+        } else {
+            const noGoalsMsg = document.createElement('p');
+            noGoalsMsg.textContent = 'No goals defined yet.';
+            newTaskGoalsContainer.appendChild(noGoalsMsg);
         }
+    }
 
-        function updateWeeklyProgress() {
-            const now = new Date();
-            if (shouldResetWeeklyProgress(now, weeklyProgress.startDate)) {
-                resetWeeklyProgress(now);
+    function saveGoals() {
+        localStorage.setItem('goals', JSON.stringify(goals));
+        console.log("Goals saved:", goals);
+    }
+
+    function saveTasks() {
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        localStorage.setItem('weeklyProgress', JSON.stringify(weeklyProgress));
+        console.log("Tasks saved:", tasks);
+    }
+
+    function recalcGoalsFromTasks() {
+        // Recalculate goals from tasks' timeSpent
+        goals = {};
+        tasks.forEach(task => {
+            if (task.tags && task.tags.length > 0) {
+                task.tags.forEach(tag => {
+                    if (!goals[tag]) goals[tag] = { totalMinutes:0, weeklyMinutes:0 };
+                    goals[tag].totalMinutes += task.timeSpent;
+                    goals[tag].weeklyMinutes += task.timeSpent;
+                });
             }
-            const progressPercentage = Math.min((weeklyProgress.minutes / weeklyGoal) * 100, 100);
-            weeklyProgressBar.style.width = progressPercentage + '%';
-            weeklyProgressText.textContent = `${Math.floor(weeklyProgress.minutes / 60)}/${weeklyGoal / 60}`;
-            localStorage.setItem('weeklyProgress', JSON.stringify(weeklyProgress));
-
-            // Check if weekly goal is achieved and congratulation hasn't been shown this week
-            if (weeklyProgress.minutes >= weeklyGoal && (!lastWeeklyCongrats || shouldResetWeeklyProgress(now, lastWeeklyCongrats))) {
-                showWeeklyGoalAchieved();
-                lastWeeklyCongrats = now.toISOString();
-                localStorage.setItem('lastWeeklyCongrats', JSON.stringify(lastWeeklyCongrats));
-            }
-        }
-
-        function resetWeeklyProgress(now) {
-            const monday = new Date(now);
-            monday.setDate(now.getDate() - now.getDay() + 1); // Set to Monday
-            monday.setHours(0, 0, 0, 0); // Set to 00:00:00
-
-            weeklyProgress = { startDate: monday.toISOString(), minutes: 0 };
-            lastWeeklyCongrats = null;
-            localStorage.setItem('weeklyProgress', JSON.stringify(weeklyProgress));
-            localStorage.setItem('lastWeeklyCongrats', JSON.stringify(lastWeeklyCongrats));
-        }
-
-        function showWeeklyGoalAchieved() {
-            congratsMessage.textContent = "Congratulations! You've achieved your weekly goal of 21 hours!";
-            congratsMessage.style.display = 'block';
-            confetti({
-                particleCount: 200,
-                spread: 90,
-                origin: { y: 0.6 }
-            });
-            setTimeout(() => {
-                congratsMessage.style.display = 'none';
-            }, 5000);
-        }
-
-        function renderTasks() {
-            const searchQuery = searchInput.value.toLowerCase();
-            taskList.innerHTML = '';
-            tasks.forEach((task, index) => {
-                if (task.name.toLowerCase().includes(searchQuery)) {
-                    const progressPercentage = task.goal > 0 ? (task.progress / task.goal) * 100 : 0;
-                    const taskElement = document.createElement('div');
-                    taskElement.className = 'task';
-                    taskElement.innerHTML = `
-                        <div class="task-header">
-                            <span class="task-title">${task.name}</span>
-                            <div class="task-buttons">
-                                <button onclick="toggleEditForm(${index})">Edit</button>
-                                <button onclick="deleteTask(${index})">Delete</button>
-                            </div>
-                        </div>
-                        <p>${task.timeSpent} minutes</p>
-                        <div class="progress-bar">
-                            <div class="progress" style="width: ${progressPercentage}%"></div>
-                            <div class="progress-text">${task.progress}/${task.goal}</div>
-                        </div>
-                        <div class="increment-buttons">
-                            <button class="small-button" onclick="incrementTime(${index}, 1)">+1 Min</button>
-                            <button class="small-button" onclick="incrementTime(${index}, 5)">+5 Min</button>
-                            <button class="small-button" onclick="incrementTime(${index}, 10)">+10 Min</button>
-                            <button class="small-button" onclick="incrementProgress(${index})">+1 Prog</button>
-                        </div>
-                        <div class="edit-form" id="editForm${index}" style="display: none;">
-                            <input type="text" id="editName${index}" value="${task.name}">
-                            <input type="number" id="editGoal${index}" value="${task.goal}">
-                            <input type="number" id="editProgress${index}" value="${task.progress}">
-                            <input type="number" id="editTime${index}" value="${task.timeSpent}">
-                            <button class="small-button" onclick="saveEdit(${index})">Save</button>
-                        </div>
-                    `;
-                    taskList.appendChild(taskElement);
-                }
-            });
-            updateOverallProgress();
-            updateWeeklyProgress();
-        }
-
-
-        function addTask() {
-            const name = taskInput.value.trim();
-            const goal = parseInt(taskGoal.value) || 0;
-            if (name) {
-                tasks.unshift({ name, timeSpent: 0, goal, progress: 0, lastUpdated: new Date().toISOString() });
-                taskInput.value = '';
-                taskGoal.value = '';
-                saveTasks();
-                renderTasks();
-            }
-        }
-
-        function toggleEditForm(index) {
-            const editForm = document.getElementById(`editForm${index}`);
-            editForm.style.display = editForm.style.display === 'none' ? 'flex' : 'none';
-        }
-
-        function saveEdit(index) {
-            const newName = document.getElementById(`editName${index}`).value.trim();
-            const newGoal = parseInt(document.getElementById(`editGoal${index}`).value) || 0;
-            const newProgress = parseInt(document.getElementById(`editProgress${index}`).value) || 0;
-            const newTime = parseInt(document.getElementById(`editTime${index}`).value) || 0;
-            if (newName) {
-                const editedTask = tasks.splice(index, 1)[0];
-                editedTask.name = newName;
-                editedTask.goal = newGoal;
-                editedTask.progress = newProgress;
-                editedTask.timeSpent = newTime;
-                tasks.unshift(editedTask);
-                saveTasks();
-                renderTasks();
-            }
-        }
-
-        function deleteTask(index) {
-            tasks.splice(index, 1);
-            saveTasks();
-            renderTasks();
-        }
-
-        function incrementProgress(index) {
-            const updatedTask = tasks.splice(index, 1)[0];
-            updatedTask.progress++;
-            tasks.unshift(updatedTask);
-            saveTasks();
-            renderTasks();
-        }
-
-        function incrementTime(index, minutes) {
-            const updatedTask = tasks.splice(index, 1)[0];
-            updatedTask.timeSpent += minutes;
-            tasks.unshift(updatedTask);
-            weeklyProgress.minutes += minutes;
-            saveTasks();
-            renderTasks();
-        }
-
-
-        function saveTasks() {
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-            localStorage.setItem('weeklyProgress', JSON.stringify(weeklyProgress));
-        }
-
-        function importXLSX(event) {
-            const file = event.target.files[0];
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const data = new Uint8Array(e.target.result);
-                const workbook = XLSX.read(data, {type: 'array'});
-                const sheetName = workbook.SheetNames[0];
-                const worksheet = workbook.Sheets[sheetName];
-                const json = XLSX.utils.sheet_to_json(worksheet);
-                const newTasks = json.map(row => ({
-                    name: row.Name || '',
-                    goal: parseInt(row.Goal) || 0,
-                    progress: parseInt(row.Progress) || 0,
-                    timeSpent: parseInt(row.TimeSpent) || 0
-                }));
-                tasks = newTasks.concat(tasks);
-                saveTasks();
-                renderTasks();
-            };
-            reader.readAsArrayBuffer(file);
-        }
-
-        function exportXLSX() {
-            const dataToExport = tasks.map(task => ({
-                Name: task.name,
-                Goal: task.goal,
-                Progress: task.progress,
-                TimeSpent: task.timeSpent
-            }));
-            const worksheet = XLSX.utils.json_to_sheet(dataToExport);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, 'Tasks');
-            XLSX.writeFile(workbook, 'tasks.xlsx');
-        }
-
-        addTaskButton.addEventListener('click', addTask);
-        taskInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') addTask();
         });
-        searchInput.addEventListener('input', renderTasks);
-        csvInput.addEventListener('change', importXLSX);
+        saveGoals();
+        console.log("Goals recalculated from tasks");
+    }
 
-        function loadTasks() {
-            const savedTasks = localStorage.getItem('tasks');
-            const savedWeeklyProgress = localStorage.getItem('weeklyProgress');
-            const savedLastCelebratedMilestone = localStorage.getItem('lastCelebratedMilestone');
-            const savedLastWeeklyCongrats = localStorage.getItem('lastWeeklyCongrats');
-            if (savedTasks) {
-                tasks = JSON.parse(savedTasks);
+    function createGoal() {
+        const name = newGoalInput.value.trim();
+        if (!name) {
+            alert("Goal name cannot be empty.");
+            return;
+        }
+        if (!goals[name]) {
+            goals[name] = { totalMinutes: 0, weeklyMinutes: 0 };
+            saveGoals();
+            newGoalInput.value = '';
+            toggleGoalForm();
+            renderGoals();
+        } else {
+            alert("Goal already exists.");
+        }
+    }
+
+    function clearStorage() {
+        localStorage.removeItem('tasks');
+        localStorage.removeItem('weeklyProgress');
+        localStorage.removeItem('goals');
+        localStorage.removeItem('lastCelebratedMilestone');
+        tasks = [];
+        weeklyProgress = { startDate: null };
+        goals = {};
+        BIG_GOAL_NAME = "1000 Hours";
+        GOAL_TOTAL_HOURS = 1000;
+        GOAL_WEEKLY_HOURS = 21;
+        renderTasks();
+        renderGoals();
+        console.log("Storage cleared");
+    }
+
+    function shouldResetWeeklyProgress(currentDate, lastResetDate) {
+        if (!lastResetDate) return true;
+        const lastResetDay = new Date(lastResetDate).getDay();
+        const currentDay = currentDate.getDay();
+        return (currentDay === 1 && lastResetDay !== 1) ||
+               (currentDate - new Date(lastResetDate) > 7 * 24 * 60 * 60 * 1000);
+    }
+
+    function resetWeeklyProgress(now) {
+        const monday = new Date(now);
+        monday.setDate(now.getDate() - now.getDay() + 1);
+        monday.setHours(0, 0, 0, 0);
+        weeklyProgress = { startDate: monday.toISOString() };
+        localStorage.setItem('weeklyProgress', JSON.stringify(weeklyProgress));
+
+        for (const gName in goals) {
+            goals[gName].weeklyMinutes = 0;
+        }
+        saveGoals();
+        console.log("Weekly progress reset");
+    }
+
+    function renderGoals() {
+        goalsContainer.innerHTML = '';
+        const goalNames = Object.keys(goals);
+        if (goalNames.length > 0) {
+            goalsListDiv.style.display = 'block';
+            goalNames.forEach((gName) => {
+                const gData = goals[gName];
+                const overallPerc = Math.min((gData.totalMinutes / (GOAL_TOTAL_HOURS * 60)) * 100, 100);
+                const weeklyPerc = Math.min((gData.weeklyMinutes / (GOAL_WEEKLY_HOURS * 60)) * 100, 100);
+                const totalHours = Math.floor(gData.totalMinutes / 60);
+                const weeklyHours = Math.floor(gData.weeklyMinutes / 60);
+
+                const goalCard = document.createElement('div');
+                goalCard.className = 'goal-card';
+                goalCard.innerHTML = `
+                    <h3>${gName}</h3>
+                    <div class="goal-progress-bar">
+                        <div class="goal-progress" style="width: ${overallPerc}%"></div>
+                        <div class="goal-progress-text">${totalHours}/${GOAL_TOTAL_HOURS} hrs</div>
+                    </div>
+                    <div class="goal-progress-bar">
+                        <div class="goal-progress" style="width: ${weeklyPerc}%"></div>
+                        <div class="goal-progress-text">${weeklyHours}/${GOAL_WEEKLY_HOURS} hrs (week)</div>
+                    </div>
+                    <div class="edit-delete-btns">
+                        <button onclick="startEditGoal('${gName}')">✏️</button>
+                        <button onclick="deleteGoal('${gName}')">🗑️</button>
+                    </div>
+                `;
+                goalsContainer.appendChild(goalCard);
+            });
+        } else {
+            goalsListDiv.style.display = 'none';
+        }
+        console.log("Goals rendered");
+    }
+
+    function startEditGoal(oldName) {
+        const goalCard = Array.from(goalsContainer.children).find(c => c.querySelector('h3') && c.querySelector('h3').textContent === oldName);
+        if (!goalCard) return;
+        const newNameInput = document.createElement('input');
+        newNameInput.value = oldName;
+        const saveBtn = document.createElement('button');
+        saveBtn.textContent = 'Save';
+        saveBtn.onclick = () => renameGoal(oldName, newNameInput.value.trim());
+
+        const editDiv = document.createElement('div');
+        editDiv.className = 'edit-form-inline';
+        editDiv.appendChild(newNameInput);
+        editDiv.appendChild(saveBtn);
+
+        const h3 = goalCard.querySelector('h3');
+        h3.replaceWith(editDiv);
+    }
+
+    function renameGoal(oldName, newName) {
+        if (!newName || goals[newName]) return; 
+        const gData = goals[oldName];
+        delete goals[oldName];
+        goals[newName] = gData;
+
+        tasks.forEach(task => {
+            if (task.tags && task.tags.includes(oldName)) {
+                task.tags = task.tags.map(t => t === oldName ? newName : t);
             }
-            if (savedWeeklyProgress) {
-                weeklyProgress = JSON.parse(savedWeeklyProgress);
-                if (shouldResetWeeklyProgress(new Date(), weeklyProgress.startDate)) {
-                    resetWeeklyProgress(new Date());
+        });
+
+        saveGoals();
+        saveTasks();
+        recalcGoalsFromTasks();
+        renderGoals();
+        renderTasks();
+    }
+
+    function deleteGoal(gName) {
+        delete goals[gName];
+
+        tasks.forEach(task => {
+            if (task.tags) {
+                task.tags = task.tags.filter(t => t !== gName);
+            }
+        });
+
+        saveGoals();
+        saveTasks();
+        recalcGoalsFromTasks();
+        renderGoals();
+        renderTasks();
+    }
+
+    function addTask() {
+        const name = newTaskName.value.trim();
+        if (!name) {
+            alert("Task name cannot be empty.");
+            return;
+        }
+        const g = parseInt(newTaskGoal.value) || 0;
+        const selectedGoals = Array.from(newTaskGoalsContainer.querySelectorAll('.tag-pill.selected')).map(p => p.textContent);
+
+        tasks.unshift({
+            name,
+            timeSpent: 0,
+            goal: g,
+            progress: 0,
+            tags: selectedGoals,
+            lastUpdated: new Date().toISOString()
+        });
+
+        newTaskName.value = '';
+        newTaskGoal.value = '';
+        toggleTaskForm();
+        saveTasks();
+        recalcGoalsFromTasks();
+        renderTasks();
+        console.log("Task added");
+    }
+
+    function showCongratulation(hours) {
+        congratsMessage.textContent = `Congratulations! You've reached ${hours} hours!`;
+        congratsMessage.style.display = 'block';
+        confetti({particleCount:100,spread:70,origin:{y:0.6}});
+        setTimeout(() => {
+            congratsMessage.style.display = 'none';
+        }, 5000);
+    }
+
+    function updateWeeklyProgress() {
+        const now = new Date();
+        if (shouldResetWeeklyProgress(now, weeklyProgress.startDate)) {
+            resetWeeklyProgress(now);
+        }
+    }
+
+    function renderTasks() {
+        const searchQuery = searchInput.value.toLowerCase();
+        const taskList = document.getElementById('taskList');
+        taskList.innerHTML = '';
+        const totalMinutes = tasks.reduce((sum, task) => sum + task.timeSpent, 0);
+
+        tasks.forEach((task, index) => {
+            if (task.name.toLowerCase().includes(searchQuery)) {
+                const progressPercentage = task.goal > 0 ? (task.progress / task.goal) * 100 : 0;
+                const tagsDisplay = (task.tags && task.tags.length > 0) ? `Tags: ${task.tags.join(', ')}` : '';
+                const taskElement = document.createElement('div');
+                taskElement.className = 'task';
+                taskElement.innerHTML = `
+                    <div class="task-header">
+                        <span class="task-title">${task.name}</span>
+                        <div class="increment-buttons">
+                            <button class="small-button" onclick="toggleEditForm(${index})">Edit</button>
+                            <button class="small-button" onclick="deleteTask(${index})">Delete</button>
+                        </div>
+                    </div>
+                    <p>${task.timeSpent} minutes</p>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: ${progressPercentage}%"></div>
+                        <div class="progress-text">${task.progress}/${task.goal}</div>
+                    </div>
+                    <p>${tagsDisplay}</p>
+                    <div class="increment-buttons">
+                        <button class="small-button" onclick="incrementTime(${index}, 1)">+1 Min</button>
+                        <button class="small-button" onclick="incrementTime(${index}, 5)">+5 Min</button>
+                        <button class="small-button" onclick="incrementTime(${index}, 10)">+10 Min</button>
+                        <button class="small-button" onclick="incrementProgress(${index})">+1 Prog</button>
+                    </div>
+                    <div class="edit-form" id="editForm${index}" style="display: none;">
+                        <input type="text" id="editName${index}" value="${task.name}">
+                        <input type="number" id="editGoal${index}" value="${task.goal}">
+                        <input type="number" id="editProgress${index}" value="${task.progress}">
+                        <input type="number" id="editTime${index}" value="${task.timeSpent}">
+                        <p>Select Goals (Tags):</p>
+                        <div id="editTaskGoals${index}"></div>
+                        <button class="small-button" onclick="saveEdit(${index})">Save</button>
+                    </div>
+                `;
+                taskList.appendChild(taskElement);
+
+                const editGoalsContainer = document.getElementById(`editTaskGoals${index}`);
+                const goalNames = Object.keys(goals);
+                if (goalNames.length > 0) {
+                    goalNames.forEach(gName => {
+                        const pill = document.createElement('span');
+                        pill.className = 'tag-pill';
+                        pill.textContent = gName;
+                        if (task.tags && task.tags.includes(gName)) {
+                            pill.classList.add('selected');
+                        }
+                        pill.onclick = () => pill.classList.toggle('selected');
+                        editGoalsContainer.appendChild(pill);
+                    });
+                } else {
+                    const noGoalsMsg = document.createElement('p');
+                    noGoalsMsg.textContent = 'No goals defined yet.';
+                    editGoalsContainer.appendChild(noGoalsMsg);
                 }
-            } else {
-                resetWeeklyProgress(new Date());
             }
-            if (savedLastCelebratedMilestone) {
-                lastCelebratedMilestone = parseInt(savedLastCelebratedMilestone);
-            }
-            if (savedLastWeeklyCongrats) {
-                lastWeeklyCongrats = JSON.parse(savedLastWeeklyCongrats);
-            }
-            renderTasks();
+        });
+
+        const hours = Math.floor(totalMinutes / 60);
+        const lastCelebratedMilestone = parseInt(localStorage.getItem('lastCelebratedMilestone')) || 0;
+        const milestone = Math.floor(hours / 10) * 10;
+        if (milestone > lastCelebratedMilestone) {
+            showCongratulation(milestone);
+            localStorage.setItem('lastCelebratedMilestone', milestone);
         }
 
-        // Call loadTasks() when the page loads
-        window.addEventListener('load', loadTasks);
-    </script>
+        updateWeeklyProgress();
+        renderGoals();
+        bigGoalTitle.textContent = BIG_GOAL_NAME;
+        console.log("Tasks rendered");
+    }
+
+    function toggleEditForm(index) {
+        const editForm = document.getElementById(`editForm${index}`);
+        editForm.style.display = (editForm.style.display === 'none' ? 'flex' : 'none');
+    }
+
+    function saveEdit(index) {
+        const newName = document.getElementById(`editName${index}`).value.trim();
+        const newGoalVal = parseInt(document.getElementById(`editGoal${index}`).value) || 0;
+        const newProgress = parseInt(document.getElementById(`editProgress${index}`).value) || 0;
+        const newTime = parseInt(document.getElementById(`editTime${index}`).value) || 0;
+        const editGoalsContainer = document.getElementById(`editTaskGoals${index}`);
+        const selectedGoals = Array.from(editGoalsContainer.querySelectorAll('.tag-pill.selected')).map(p => p.textContent);
+
+        if (!newName) {
+            alert("Task name cannot be empty.");
+            return;
+        }
+        const editedTask = tasks.splice(index, 1)[0];
+        editedTask.name = newName;
+        editedTask.goal = newGoalVal;
+        editedTask.progress = newProgress;
+        editedTask.timeSpent = newTime;
+        editedTask.tags = selectedGoals;
+        tasks.unshift(editedTask);
+        saveTasks();
+        recalcGoalsFromTasks();
+        renderTasks();
+        console.log("Task edited:", editedTask);
+    }
+
+    function deleteTask(index) {
+        const removed = tasks.splice(index, 1)[0];
+        console.log("Task deleted:", removed);
+        saveTasks();
+        recalcGoalsFromTasks();
+        renderTasks();
+    }
+
+    function incrementProgress(index) {
+        const updatedTask = tasks[index];
+        updatedTask.progress++;
+        console.log("Incrementing progress for task:", updatedTask.name);
+        saveTasks();
+        recalcGoalsFromTasks();
+        renderTasks();
+    }
+
+    function incrementTime(index, minutes) {
+        const updatedTask = tasks[index];
+        updatedTask.timeSpent += minutes;
+        console.log("Incrementing time by", minutes, "for task:", updatedTask.name);
+        saveTasks();
+        recalcGoalsFromTasks();
+        renderTasks();
+    }
+
+    async function importXLSX(event) {
+        try {
+            console.log("Starting import...");
+            const file = event.target.files[0];
+            if (!file) {
+                console.warn("No file selected for import.");
+                return;
+            }
+            const data = await file.arrayBuffer();
+            const workbook = XLSX.read(data, { type: 'array' });
+
+            if (!workbook.SheetNames.includes('Tasks')) {
+                alert("The imported file does not have a 'Tasks' sheet. Cannot import.");
+                console.warn("No 'Tasks' sheet found.");
+                return;
+            }
+
+            const taskSheet = workbook.Sheets['Tasks'];
+            const taskJson = XLSX.utils.sheet_to_json(taskSheet);
+            console.log("Tasks data from sheet:", taskJson);
+
+            const requiredColumns = ["Name","Goal","Progress","TimeSpent","Tags"];
+            const sheetHeaders = Object.keys(taskJson[0] || {});
+            for (let col of requiredColumns) {
+                if (!sheetHeaders.includes(col)) {
+                    alert(`Missing required column '${col}' in 'Tasks' sheet. Cannot import.`);
+                    console.warn("Missing column:", col);
+                    return;
+                }
+            }
+
+            let importedTasks = taskJson.map(row => {
+                const name = row.Name || '';
+                const goal = parseInt(row.Goal) || 0;
+                const progress = parseInt(row.Progress) || 0;
+                const timeSpent = parseInt(row.TimeSpent) || 0;
+                const tags = row.Tags ? row.Tags.split(',').map(t=>t.trim()).filter(t=>t) : [];
+
+                return {
+                    name,
+                    goal,
+                    progress,
+                    timeSpent,
+                    tags,
+                    lastUpdated: new Date().toISOString()
+                };
+            });
+
+            if (importedTasks.length === 0) {
+                alert("No tasks found in the 'Tasks' sheet. Nothing imported.");
+                console.warn("Tasks sheet was empty");
+                return;
+            }
+
+            tasks = importedTasks;
+            saveTasks();
+            recalcGoalsFromTasks();
+            renderTasks();
+            renderGoals();
+
+            alert(`Import completed successfully! Imported ${importedTasks.length} tasks and recalculated goals from tags.`);
+            console.log("Import finished successfully. Tasks imported:", importedTasks.length);
+
+        } catch (err) {
+            console.error("Error importing the XLSX file:", err);
+            alert("Failed to import the XLSX file. Check console for details.");
+        } finally {
+            csvInput.value = '';
+        }
+    }
+
+    function exportXLSX() {
+        console.log("Starting export...");
+        const dataToExportTasks = tasks.map(task => ({
+            Name: task.name,
+            Goal: task.goal,
+            Progress: task.progress,
+            TimeSpent: task.timeSpent,
+            Tags: task.tags ? task.tags.join(', ') : ''
+        }));
+        const worksheetTasks = XLSX.utils.json_to_sheet(dataToExportTasks);
+        
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheetTasks, 'Tasks');
+        
+        XLSX.writeFile(workbook, 'data.xlsx');
+        console.log("Export completed successfully.");
+        alert("Export completed successfully!");
+    }
+
+    function loadData() {
+        console.log("Loading data from localStorage...");
+        const savedTasks = localStorage.getItem('tasks');
+        const savedWeeklyProgress = localStorage.getItem('weeklyProgress');
+        const savedGoals = localStorage.getItem('goals');
+
+        if (savedTasks) {
+            tasks = JSON.parse(savedTasks);
+            console.log("Loaded tasks:", tasks);
+        }
+        if (savedWeeklyProgress) {
+            weeklyProgress = JSON.parse(savedWeeklyProgress);
+        } else {
+            weeklyProgress = { startDate: null };
+        }
+        if (savedGoals) {
+            goals = JSON.parse(savedGoals);
+            console.log("Loaded goals:", goals);
+        }
+
+        recalcGoalsFromTasks(); // Always re-derive goals from tasks
+
+        bigGoalTitle.textContent = BIG_GOAL_NAME;
+
+        const now = new Date();
+        if (shouldResetWeeklyProgress(now, weeklyProgress.startDate)) {
+            resetWeeklyProgress(now);
+        }
+
+        renderTasks();
+        renderGoals();
+
+        // Attach search event
+        searchInput.addEventListener('input', renderTasks);
+        console.log("Data loaded and UI rendered");
+    }
+
+    csvInput.addEventListener('change', importXLSX);
+    window.addEventListener('load', loadData);
+</script>
 </body>
 </html>
