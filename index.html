@@ -89,11 +89,11 @@ button:active,.small-button:active {transform:translateY(1px);}
 #congratsMessage {
   position:fixed;top:0;left:0;width:100%;background:#4CAF50;color:white;text-align:center;padding:10px;z-index:1000;display:none;
 }
-.goals-list {margin-bottom:20px;}
+.goals-list {margin-bottom:8px;}
 .goals-list h2 {font-size:20px;margin-bottom:10px;font-weight:600;}
 .goals-scroll {display:flex;gap:20px;overflow-x:auto;white-space:nowrap;padding-bottom:10px;}
 .goal-card {background:var(--light-gray);border-radius:10px;padding:15px;min-width:200px;flex:0 0 auto;position:relative;}
-.goal-card h3 {font-size:16px;margin-bottom:10px;font-weight:600;color:var(--black);}
+.goal-card h3 {font-size:16px;font-weight:600;color:var(--black);}
 .goal-progress-bar {position:relative;height:16px;background:var(--white);border-radius:8px;overflow:hidden;margin-bottom:10px;}
 .goal-progress {height:100%;background:linear-gradient(45deg,var(--salmon),var(--light-blue),var(--pale-yellow));transition:width 0.3s ease;}
 .goal-progress-text {
@@ -109,11 +109,6 @@ button:active,.small-button:active {transform:translateY(1px);}
 </style>
 </head>
 <body>
-<script>
-    let BIG_GOAL_NAME = "1000 Hours";
-    let GOAL_TOTAL_HOURS = 1000;
-    let GOAL_WEEKLY_HOURS = 21;
-</script>
 <div id="congratsMessage"></div>
 <div class="container">
     <div class="corner-buttons">
@@ -154,6 +149,10 @@ button:active,.small-button:active {transform:translateY(1px);}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 <script>
+    // Define variables only once here
+    let BIG_GOAL_NAME = "1000 Hours";
+    let GOAL_TOTAL_HOURS = 1000;
+    let GOAL_WEEKLY_HOURS = 21;
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     let weeklyProgress = JSON.parse(localStorage.getItem('weeklyProgress')) || { startDate: null };
     let goals = JSON.parse(localStorage.getItem('goals')) || {};
@@ -209,14 +208,13 @@ button:active,.small-button:active {transform:translateY(1px);}
     }
 
     function recalcGoalsFromTasks() {
-        // Recalculate goals from tasks' timeSpent
         goals = {};
         tasks.forEach(task => {
             if (task.tags && task.tags.length > 0) {
                 task.tags.forEach(tag => {
                     if (!goals[tag]) goals[tag] = { totalMinutes:0, weeklyMinutes:0 };
                     goals[tag].totalMinutes += task.timeSpent;
-                    goals[tag].weeklyMinutes += task.timeSpent;
+                    goals[tag].weeklyMinutes += task.timeSpent; 
                 });
             }
         });
@@ -378,14 +376,16 @@ button:active,.small-button:active {transform:translateY(1px);}
         const g = parseInt(newTaskGoal.value) || 0;
         const selectedGoals = Array.from(newTaskGoalsContainer.querySelectorAll('.tag-pill.selected')).map(p => p.textContent);
 
-        tasks.unshift({
+        const newTask = {
             name,
             timeSpent: 0,
             goal: g,
             progress: 0,
             tags: selectedGoals,
             lastUpdated: new Date().toISOString()
-        });
+        };
+
+        tasks.unshift(newTask);
 
         newTaskName.value = '';
         newTaskGoal.value = '';
@@ -393,7 +393,7 @@ button:active,.small-button:active {transform:translateY(1px);}
         saveTasks();
         recalcGoalsFromTasks();
         renderTasks();
-        console.log("Task added");
+        console.log("Task added:", newTask);
     }
 
     function showCongratulation(hours) {
@@ -420,8 +420,8 @@ button:active,.small-button:active {transform:translateY(1px);}
 
         tasks.forEach((task, index) => {
             if (task.name.toLowerCase().includes(searchQuery)) {
-                const progressPercentage = task.goal > 0 ? (task.progress / task.goal) * 100 : 0;
-                const tagsDisplay = (task.tags && task.tags.length > 0) ? `Tags: ${task.tags.join(', ')}` : '';
+                const progressPercentage = task.goal > 0 ? (task.progress / task.goal)*100 : 0;
+                const tagsDisplay = (task.tags && task.tags.length>0) ? `Tags: ${task.tags.join(', ')}` : '';
                 const taskElement = document.createElement('div');
                 taskElement.className = 'task';
                 taskElement.innerHTML = `
@@ -444,7 +444,7 @@ button:active,.small-button:active {transform:translateY(1px);}
                         <button class="small-button" onclick="incrementTime(${index}, 10)">+10 Min</button>
                         <button class="small-button" onclick="incrementProgress(${index})">+1 Prog</button>
                     </div>
-                    <div class="edit-form" id="editForm${index}" style="display: none;">
+                    <div class="edit-form" id="editForm${index}" style="display:none;">
                         <input type="text" id="editName${index}" value="${task.name}">
                         <input type="number" id="editGoal${index}" value="${task.goal}">
                         <input type="number" id="editProgress${index}" value="${task.progress}">
@@ -493,7 +493,7 @@ button:active,.small-button:active {transform:translateY(1px);}
 
     function toggleEditForm(index) {
         const editForm = document.getElementById(`editForm${index}`);
-        editForm.style.display = (editForm.style.display === 'none' ? 'flex' : 'none');
+        editForm.style.display = editForm.style.display === 'none' ? 'flex' : 'none';
     }
 
     function saveEdit(index) {
@@ -514,11 +514,12 @@ button:active,.small-button:active {transform:translateY(1px);}
         editedTask.progress = newProgress;
         editedTask.timeSpent = newTime;
         editedTask.tags = selectedGoals;
+        // move edited task to top
         tasks.unshift(editedTask);
         saveTasks();
         recalcGoalsFromTasks();
         renderTasks();
-        console.log("Task edited:", editedTask);
+        console.log("Task edited and moved to top:", editedTask);
     }
 
     function deleteTask(index) {
@@ -530,8 +531,10 @@ button:active,.small-button:active {transform:translateY(1px);}
     }
 
     function incrementProgress(index) {
-        const updatedTask = tasks[index];
+        const updatedTask = tasks.splice(index,1)[0];
         updatedTask.progress++;
+        // Move updated task to top
+        tasks.unshift(updatedTask);
         console.log("Incrementing progress for task:", updatedTask.name);
         saveTasks();
         recalcGoalsFromTasks();
@@ -539,8 +542,10 @@ button:active,.small-button:active {transform:translateY(1px);}
     }
 
     function incrementTime(index, minutes) {
-        const updatedTask = tasks[index];
+        const updatedTask = tasks.splice(index,1)[0];
         updatedTask.timeSpent += minutes;
+        // Move updated task to top
+        tasks.unshift(updatedTask);
         console.log("Incrementing time by", minutes, "for task:", updatedTask.name);
         saveTasks();
         recalcGoalsFromTasks();
@@ -669,7 +674,6 @@ button:active,.small-button:active {transform:translateY(1px);}
         renderTasks();
         renderGoals();
 
-        // Attach search event
         searchInput.addEventListener('input', renderTasks);
         console.log("Data loaded and UI rendered");
     }
