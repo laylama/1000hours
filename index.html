@@ -124,8 +124,8 @@ button:active,.small-button:active {transform:translateY(1px);}
     <div class="task-form" id="taskForm">
         <input type="text" id="newTaskName" placeholder="Enter new task name">
         <input type="number" id="newTaskGoal" placeholder="Task goal (number)">
-        <p>Select Goals (Tags):</p>
-        <div id="newTaskGoalsContainer"></div>
+        <p>Select Goals (Tags)
+ontainer"></div>
         <button onclick="addTask()">Add</button>
     </div>
 
@@ -149,7 +149,6 @@ button:active,.small-button:active {transform:translateY(1px);}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 <script>
-    // Define variables only once here
     let BIG_GOAL_NAME = "1000 Hours";
     let GOAL_TOTAL_HOURS = 1000;
     let GOAL_WEEKLY_HOURS = 21;
@@ -208,16 +207,30 @@ button:active,.small-button:active {transform:translateY(1px);}
     }
 
     function recalcGoalsFromTasks() {
+        // Recalculate goals from tasks' timeSpent
+        let oldGoals = goals; // Keep a reference if needed
         goals = {};
         tasks.forEach(task => {
             if (task.tags && task.tags.length > 0) {
                 task.tags.forEach(tag => {
-                    if (!goals[tag]) goals[tag] = { totalMinutes:0, weeklyMinutes:0 };
+                    if (!goals[tag]) goals[tag] = { totalMinutes:0, weeklyMinutes:0, weeklyBaseline:0 };
                     goals[tag].totalMinutes += task.timeSpent;
-                    goals[tag].weeklyMinutes += task.timeSpent; 
                 });
             }
         });
+
+        // After we have totalMinutes, compute weeklyMinutes as totalMinutes - weeklyBaseline
+        for (const gName in goals) {
+            // If we had oldGoals data, keep the old weeklyBaseline if it exists
+            if (oldGoals[gName] && typeof oldGoals[gName].weeklyBaseline === 'number') {
+                goals[gName].weeklyBaseline = oldGoals[gName].weeklyBaseline;
+            } else {
+                // If no baseline is present, initialize baseline to current total
+                goals[gName].weeklyBaseline = goals[gName].totalMinutes;
+            }
+            goals[gName].weeklyMinutes = goals[gName].totalMinutes - goals[gName].weeklyBaseline;
+        }
+
         saveGoals();
         console.log("Goals recalculated from tasks");
     }
@@ -229,7 +242,9 @@ button:active,.small-button:active {transform:translateY(1px);}
             return;
         }
         if (!goals[name]) {
-            goals[name] = { totalMinutes: 0, weeklyMinutes: 0 };
+            goals[name] = { totalMinutes: 0, weeklyMinutes:0, weeklyBaseline:0 };
+            // Set baseline to totalMinutes (which is 0 now, fresh start)
+            goals[name].weeklyBaseline = goals[name].totalMinutes;
             saveGoals();
             newGoalInput.value = '';
             toggleGoalForm();
@@ -271,7 +286,8 @@ button:active,.small-button:active {transform:translateY(1px);}
         localStorage.setItem('weeklyProgress', JSON.stringify(weeklyProgress));
 
         for (const gName in goals) {
-            goals[gName].weeklyMinutes = 0;
+            // set weeklyBaseline to current totalMinutes to start fresh
+            goals[gName].weeklyBaseline = goals[gName].totalMinutes;
         }
         saveGoals();
         console.log("Weekly progress reset");
@@ -514,7 +530,7 @@ button:active,.small-button:active {transform:translateY(1px);}
         editedTask.progress = newProgress;
         editedTask.timeSpent = newTime;
         editedTask.tags = selectedGoals;
-        // move edited task to top
+        // Move edited task to top
         tasks.unshift(editedTask);
         saveTasks();
         recalcGoalsFromTasks();
