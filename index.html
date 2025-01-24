@@ -299,40 +299,15 @@ button:active,.small-button:active {transform:translateY(1px);}
     }
 
     function renderGoals() {
-        goalsContainer.innerHTML = '';
+        goalsContainer.innerHTML = ''; // Clear the container before rendering
         const goalNames = Object.keys(goals);
-        
-        // Check if there is only one goal
-        if (goalNames.length === 1) {
-            // If one goal, make it occupy the full width
-            const gName = goalNames[0];
-            const gData = goals[gName];
-            const overallPerc = Math.min((gData.totalMinutes / (GOAL_TOTAL_HOURS * 60)) * 100, 100);
-            const weeklyPerc = Math.min((gData.weeklyMinutes / (GOAL_WEEKLY_HOURS * 60)) * 100, 100);
-            const totalHours = Math.floor(gData.totalMinutes / 60);
-            const weeklyHours = Math.floor(gData.weeklyMinutes / 60);
 
-            const goalCard = document.createElement('div');
-            goalCard.className = 'goal-card full-width-goal'; // Add a special class for full-width
-            goalCard.innerHTML = `
-                <h3>${gName}</h3>
-                <div class="goal-progress-bar">
-                    <div class="goal-progress" style="width: ${overallPerc}%"></div>
-                    <div class="goal-progress-text">${totalHours}/${GOAL_TOTAL_HOURS}</div>
-                </div>
-                <div class="goal-progress-bar">
-                    <div class="goal-progress" style="width: ${weeklyPerc}%"></div>
-                    <div class="goal-progress-text">${weeklyHours}/${GOAL_WEEKLY_HOURS}</div>
-                </div>
-                <div class="edit-delete-btns">
-                    <button onclick="startEditGoal('${gName}')">✏️</button>
-                    <button onclick="deleteGoal('${gName}')">🗑️</button>
-                </div>
-            `;
-            goalsContainer.appendChild(goalCard);
-        } else {
-            // Handle case for multiple goals normally
-            goalNames.forEach((gName) => {
+        if (goalNames.length > 0) {
+            goalsListDiv.style.display = 'block'; // Make sure the goals list is visible
+
+            if (goalNames.length === 1) {
+                // Handle one goal case
+                const gName = goalNames[0];
                 const gData = goals[gName];
                 const overallPerc = Math.min((gData.totalMinutes / (GOAL_TOTAL_HOURS * 60)) * 100, 100);
                 const weeklyPerc = Math.min((gData.weeklyMinutes / (GOAL_WEEKLY_HOURS * 60)) * 100, 100);
@@ -340,7 +315,7 @@ button:active,.small-button:active {transform:translateY(1px);}
                 const weeklyHours = Math.floor(gData.weeklyMinutes / 60);
 
                 const goalCard = document.createElement('div');
-                goalCard.className = 'goal-card';
+                goalCard.className = 'goal-card full-width-goal';
                 goalCard.innerHTML = `
                     <h3>${gName}</h3>
                     <div class="goal-progress-bar">
@@ -357,9 +332,38 @@ button:active,.small-button:active {transform:translateY(1px);}
                     </div>
                 `;
                 goalsContainer.appendChild(goalCard);
-            });
+            } else {
+                goalNames.forEach((gName) => {
+                    const gData = goals[gName];
+                    const overallPerc = Math.min((gData.totalMinutes / (GOAL_TOTAL_HOURS * 60)) * 100, 100);
+                    const weeklyPerc = Math.min((gData.weeklyMinutes / (GOAL_WEEKLY_HOURS * 60)) * 100, 100);
+                    const totalHours = Math.floor(gData.totalMinutes / 60);
+                    const weeklyHours = Math.floor(gData.weeklyMinutes / 60);
+
+                    const goalCard = document.createElement('div');
+                    goalCard.className = 'goal-card';
+                    goalCard.innerHTML = `
+                        <h3>${gName}</h3>
+                        <div class="goal-progress-bar">
+                            <div class="goal-progress" style="width: ${overallPerc}%"></div>
+                            <div class="goal-progress-text">${totalHours}/${GOAL_TOTAL_HOURS}</div>
+                        </div>
+                        <div class="goal-progress-bar">
+                            <div class="goal-progress" style="width: ${weeklyPerc}%"></div>
+                            <div class="goal-progress-text">${weeklyHours}/${GOAL_WEEKLY_HOURS}</div>
+                        </div>
+                        <div class="edit-delete-btns">
+                            <button onclick="startEditGoal('${gName}')">✏️</button>
+                            <button onclick="deleteGoal('${gName}')">🗑️</button>
+                        </div>
+                    `;
+                    goalsContainer.appendChild(goalCard);
+                });
+            }
+        } else {
+            goalsListDiv.style.display = 'none';
+            console.log("No goals available.");
         }
-        console.log("Goals rendered");
     }
 
     function startEditGoal(oldName) {
