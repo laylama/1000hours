@@ -19,97 +19,156 @@
   --light-gray: #F5F5F5;
 }
 body {
-  font-family:'Raleway',sans-serif;color:var(--black);line-height:1.6;padding:20px;background-color:var(--white);
+  font-family:'Raleway',sans-serif; color:var(--black); line-height:1.6;
+  padding:20px; background-color:var(--white);
 }
 .container {
-  max-width:1000px;margin:0 auto;background:var(--white);border-radius:20px;padding:25px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.1);position:relative;
+  max-width:1000px; margin:0 auto; background:var(--white);
+  border-radius:20px; padding:25px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.1); position:relative;
 }
 
 .goal-card.full-width-goal {
-    width: 90%; /* Make the goal card occupy the full width */
-    max-width: 90%; /* Ensure it doesn't exceed the container width */
+    width: 90%;
+    max-width: 90%;
 }
 h1 {
-  font-size:40px;color:var(--black);text-align:center;margin-bottom:1.5rem;font-weight:700;
+  font-size:40px; color:var(--black); text-align:center;
+  margin-bottom:1.5rem; font-weight:700;
 }
 .corner-buttons {
-  position:absolute;top:10px;right:10px;display:flex;gap:10px;
+  position:absolute; top:10px; right:10px; display:flex; gap:10px;
 }
 .corner-button {
-  padding:5px 10px;font-size:12px;background-color:transparent;color:var(--black);
-  border:none;border-radius:5px;cursor:pointer;transition:background-color 0.3s ease;
+  padding:5px 10px; font-size:12px; background-color:transparent;
+  color:var(--black); border:none; border-radius:5px; cursor:pointer;
+  transition:background-color 0.3s ease;
 }
 .corner-button:hover {
   background-color:rgba(128,190,245,0.2);
 }
 .goal-form, .task-form {
-  display:none;background:var(--light-gray);padding:10px;border-radius:10px;
-  position:absolute;top:40px;right:10px;z-index:999;
+  display:none; background:var(--light-gray); padding:10px; border-radius:10px;
+  position:absolute; top:40px; right:10px; z-index:999;
 }
 .goal-form input, .task-form input {
-  width:calc(100% - 2rem);padding:12px 15px;border:2px solid var(--light-blue);
-  border-radius:10px;font-size:16px;margin-bottom:15px;
+  width:calc(100% - 2rem); padding:12px 15px;
+  border:2px solid var(--light-blue); border-radius:10px;
+  font-size:16px; margin-bottom:15px;
 }
-.goal-form button,.task-form button {
-  background:var(--black);color:var(--white);border:none;padding:10px;border-radius:10px;
-  font-size:14px;font-weight:600;cursor:pointer;transition:all 0.3s ease;
+.goal-form button, .task-form button {
+  background:var(--black); color:var(--white); border:none;
+  padding:10px; border-radius:10px; font-size:14px; font-weight:600;
+  cursor:pointer; transition:all 0.3s ease;
 }
-.goal-form button:hover,.task-form button:hover {
+.goal-form button:hover, .task-form button:hover {
   background:var(--salmon);
 }
 .search-bar {
-  width:calc(100% - 2rem);padding:12px 15px;border:2px solid var(--light-blue);
-  border-radius:10px;font-size:16px;margin-bottom:15px;transition:all 0.3s ease;
+  width:calc(100% - 2rem); padding:12px 15px;
+  border:2px solid var(--light-blue); border-radius:10px;
+  font-size:16px; margin-bottom:15px; transition:all 0.3s ease;
 }
-button,.small-button {
-  background:var(--black);color:var(--white);border:none;padding:12px 20px;border-radius:10px;
-  font-size:16px;font-weight:600;cursor:pointer;transition:all 0.3s ease;
+button, .small-button {
+  background:var(--black); color:var(--white); border:none;
+  padding:12px 20px; border-radius:10px; font-size:16px; font-weight:600;
+  cursor:pointer; transition:all 0.3s ease;
 }
-button:hover,.small-button:hover {background:var(--salmon);transform:translateY(-2px);}
-button:active,.small-button:active {transform:translateY(1px);}
-#csvInput {display:none;}
+button:hover, .small-button:hover {
+  background:var(--salmon); transform:translateY(-2px);
+}
+button:active, .small-button:active {
+  transform:translateY(1px);
+}
+#csvInput {
+  display:none;
+}
 .task {
-  background:var(--light-gray);border:none;border-radius:15px;padding:20px;margin-bottom:20px;transition:all 0.3s ease;
+  background:var(--light-gray); border:none; border-radius:15px;
+  padding:20px; margin-bottom:20px; transition:all 0.3s ease;
 }
 .task-header {
-  display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:15px;
 }
-.task-title {font-size:20px;font-weight:600;color:var(--black);}
+.task-title {
+  font-size:20px; font-weight:600; color:var(--black);
+}
 .progress-bar {
-  position:relative;height:16px;background:var(--white);border-radius:8px;overflow:hidden;margin:15px 0;
+  position:relative; height:16px; background:var(--white);
+  border-radius:8px; overflow:hidden; margin:15px 0;
 }
-.progress {height:100%;background:linear-gradient(45deg,var(--salmon),var(--light-blue),var(--pale-yellow));}
+.progress {
+  height:100%;
+  background:linear-gradient(45deg, var(--salmon), var(--light-blue), var(--pale-yellow));
+}
 .progress-text {
-  position:absolute;width:100%;top:0;left:0;height:100%;display:flex;justify-content:center;align-items:center;font-size:10px;color:var(--black);font-weight:600;
+  position:absolute; width:100%; top:0; left:0; height:100%;
+  display:flex; justify-content:center; align-items:center;
+  font-size:10px; color:var(--black); font-weight:600;
 }
-.increment-buttons {display:flex;gap:10px;flex-wrap:wrap;}
-.increment-buttons button {padding:8px 12px;font-size:12px;flex:1;min-width:70px;}
-.edit-form {display:flex;flex-direction:column;gap:10px;margin-top:15px;}
+.increment-buttons {
+  display:flex; gap:10px; flex-wrap:wrap;
+}
+.increment-buttons button {
+  padding:8px 12px; font-size:12px; flex:1; min-width:70px;
+}
+.edit-form {
+  display:flex; flex-direction:column; gap:10px;
+  margin-top:15px;
+}
 .tag-pill {
-  display:inline-block;background:var(--light-blue);color:var(--white);padding:3px 8px;border-radius:8px;
-  font-size:12px;font-weight:600;cursor:pointer;transition:background 0.3s;margin-right:5px;margin-bottom:5px;
+  display:inline-block; background:var(--light-blue); color:var(--white);
+  padding:3px 8px; border-radius:8px; font-size:12px; font-weight:600;
+  cursor:pointer; transition:background 0.3s; margin-right:5px; margin-bottom:5px;
 }
-.tag-pill.selected {background:var(--salmon);}
+.tag-pill.selected {
+  background:var(--salmon);
+}
 #congratsMessage {
-  position:fixed;top:0;left:0;width:100%;background:#4CAF50;color:white;text-align:center;padding:10px;z-index:1000;display:none;
+  position:fixed; top:0; left:0; width:100%; background:#4CAF50;
+  color:white; text-align:center; padding:10px; z-index:1000;
+  display:none;
 }
-.goals-list {margin-bottom:8px;}
-.goals-list h2 {font-size:20px;margin-bottom:10px;font-weight:600;}
-.goals-scroll {display:flex;gap:20px;overflow-x:auto;white-space:nowrap;padding-bottom:10px;}
-.goal-card {background:var(--light-gray);border-radius:10px;padding:15px;min-width:200px;flex:0 0 auto;position:relative;}
-.goal-card h3 {font-size:16px;font-weight:600;color:var(--black);}
-.goal-progress-bar {position:relative;height:16px;background:var(--white);border-radius:8px;overflow:hidden;margin-bottom:10px;}
-.goal-progress {height:100%;background:linear-gradient(45deg,var(--salmon),var(--light-blue),var(--pale-yellow));transition:width 0.3s ease;}
+.goals-list {
+  margin-bottom:8px;
+}
+.goals-list h2 {
+  font-size:20px; margin-bottom:10px; font-weight:600;
+}
+.goals-scroll {
+  display:flex; gap:20px; overflow-x:auto; white-space:nowrap; padding-bottom:10px;
+}
+.goal-card {
+  background:var(--light-gray); border-radius:10px; padding:15px;
+  min-width:200px; flex:0 0 auto; position:relative;
+}
+.goal-card h3 {
+  font-size:16px; font-weight:600; color:var(--black);
+}
+.goal-progress-bar {
+  position:relative; height:16px; background:var(--white);
+  border-radius:8px; overflow:hidden; margin-bottom:10px;
+}
+.goal-progress {
+  height:100%;
+  background:linear-gradient(45deg, var(--salmon), var(--light-blue), var(--pale-yellow));
+  transition:width 0.3s ease;
+}
 .goal-progress-text {
-  position:absolute;width:100%;top:0;left:0;height:100%;display:flex;justify-content:center;align-items:center;font-size:10px;color:var(--black);font-weight:600;
+  position:absolute; width:100%; top:0; left:0; height:100%;
+  display:flex; justify-content:center; align-items:center;
+  font-size:10px; color:var(--black); font-weight:600;
 }
-.edit-delete-btns {position:absolute;top:10px;right:10px;display:flex;gap:5px;}
+.edit-delete-btns {
+  position:absolute; top:10px; right:10px; display:flex; gap:5px;
+}
 .edit-delete-btns button {
-  background:none;border:none;cursor:pointer;font-size:12px;color:var(--black);padding:3px 5px;border-radius:5px;
+  background:none; border:none; cursor:pointer; font-size:12px;
+  color:var(--black); padding:3px 5px; border-radius:5px;
 }
 .edit-delete-btns button:hover {
-  background:var(--light-blue);color:var(--white);
+  background:var(--light-blue); color:var(--white);
 }
 </style>
 </head>
@@ -385,7 +444,7 @@ button:active,.small-button:active {transform:translateY(1px);}
     }
 
     function renameGoal(oldName, newName) {
-        if (!newName || goals[newName]) return; 
+        if (!newName || goals[newName]) return;
         const gData = goals[oldName];
         delete goals[oldName];
         goals[newName] = gData;
@@ -451,7 +510,7 @@ button:active,.small-button:active {transform:translateY(1px);}
     function showCongratulation(hours) {
         congratsMessage.textContent = `Congratulations! You've reached ${hours} hours!`;
         congratsMessage.style.display = 'block';
-        confetti({particleCount:100,spread:70,origin:{y:0.6}});
+        confetti({ particleCount:100, spread:70, origin:{y:0.6} });
         setTimeout(() => {
             congratsMessage.style.display = 'none';
         }, 5000);
@@ -468,12 +527,19 @@ button:active,.small-button:active {transform:translateY(1px);}
         const searchQuery = searchInput.value.toLowerCase();
         const taskList = document.getElementById('taskList');
         taskList.innerHTML = '';
-        const totalMinutes = tasks.reduce((sum, task) => sum + task.timeSpent, 0); // Sum time from all tasks
+        const totalMinutes = tasks.reduce((sum, task) => sum + task.timeSpent, 0);
 
         tasks.forEach((task, index) => {
             if (task.name.toLowerCase().includes(searchQuery)) {
                 const progressPercentage = task.goal > 0 ? (task.progress / task.goal)*100 : 0;
                 const tagsDisplay = (task.tags && task.tags.length>0) ? `Tags: ${task.tags.join(', ')}` : '';
+                
+                // Build tag pills for the edit form
+                const tagPills = Object.keys(goals).map(gName => {
+                    const selected = task.tags && task.tags.includes(gName) ? 'selected' : '';
+                    return `<span class="tag-pill ${selected}" onclick="this.classList.toggle('selected')">${gName}</span>`;
+                }).join('');
+
                 const taskElement = document.createElement('div');
                 taskElement.className = 'task';
                 taskElement.innerHTML = `
@@ -496,6 +562,28 @@ button:active,.small-button:active {transform:translateY(1px);}
                         <button class="small-button" onclick="incrementTime(${index}, 10)">+10 Min</button>
                         <button class="small-button" onclick="incrementProgress(${index})">+1 Prog</button>
                     </div>
+
+                    <!-- Hidden edit form for this task -->
+                    <div class="edit-form" id="editForm${index}" style="display:none;">
+                        <label>Task Name</label>
+                        <input type="text" id="editName${index}" value="${task.name}">
+                        
+                        <label>Goal</label>
+                        <input type="number" id="editGoal${index}" value="${task.goal}">
+                        
+                        <label>Progress</label>
+                        <input type="number" id="editProgress${index}" value="${task.progress}">
+                        
+                        <label>Time Spent (min)</label>
+                        <input type="number" id="editTime${index}" value="${task.timeSpent}">
+                        
+                        <p>Select Goals (Tags):</p>
+                        <div id="editTaskGoals${index}" class="editTaskGoalsContainer">
+                            ${tagPills}
+                        </div>
+                        
+                        <button class="small-button" onclick="saveEdit(${index})">Save</button>
+                    </div>
                 `;
                 taskList.appendChild(taskElement);
             }
@@ -503,10 +591,11 @@ button:active,.small-button:active {transform:translateY(1px);}
 
         const hours = Math.floor(totalMinutes / 60);
         const lastCelebratedMilestone = parseInt(localStorage.getItem('lastCelebratedMilestone')) || 0;
-        const milestone = Math.floor(hours / 10) * 10; // Milestones are based on total hours
+        const milestone = Math.floor(hours / 10) * 10; // Milestones are multiples of 10 hours
+
         if (milestone > lastCelebratedMilestone) {
-            showCongratulation(milestone); // Show celebration only for new milestones
-            localStorage.setItem('lastCelebratedMilestone', milestone); // Store last milestone to avoid repeat celebrations
+            showCongratulation(milestone);
+            localStorage.setItem('lastCelebratedMilestone', milestone);
         }
 
         updateWeeklyProgress();
@@ -517,6 +606,7 @@ button:active,.small-button:active {transform:translateY(1px);}
 
     function toggleEditForm(index) {
         const editForm = document.getElementById(`editForm${index}`);
+        if (!editForm) return;
         editForm.style.display = editForm.style.display === 'none' ? 'flex' : 'none';
     }
 
@@ -538,8 +628,9 @@ button:active,.small-button:active {transform:translateY(1px);}
         editedTask.progress = newProgress;
         editedTask.timeSpent = newTime;
         editedTask.tags = selectedGoals;
-        // Move edited task to top
+        // Move edited task to top of the list
         tasks.unshift(editedTask);
+
         saveTasks();
         recalcGoalsFromTasks();
         renderTasks();
@@ -557,7 +648,6 @@ button:active,.small-button:active {transform:translateY(1px);}
     function incrementProgress(index) {
         const updatedTask = tasks.splice(index,1)[0];
         updatedTask.progress++;
-        // Move updated task to top
         tasks.unshift(updatedTask);
         console.log("Incrementing progress for task:", updatedTask.name);
         saveTasks();
@@ -568,7 +658,6 @@ button:active,.small-button:active {transform:translateY(1px);}
     function incrementTime(index, minutes) {
         const updatedTask = tasks.splice(index,1)[0];
         updatedTask.timeSpent += minutes;
-        // Move updated task to top
         tasks.unshift(updatedTask);
         console.log("Incrementing time by", minutes, "for task:", updatedTask.name);
         saveTasks();
@@ -636,7 +725,7 @@ button:active,.small-button:active {transform:translateY(1px);}
             renderTasks();
             renderGoals();
 
-            alert(`Import completed successfully! Imported ${importedTasks.length} tasks and recalculated goals from tags.`);
+            alert(`Import completed! Imported ${importedTasks.length} tasks and recalculated goals from tags.`);
             console.log("Import finished successfully. Tasks imported:", importedTasks.length);
 
         } catch (err) {
