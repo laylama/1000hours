@@ -1,218 +1,357 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌲 1000 Hours</title>
-    <link rel="apple-touch-icon" href="logo2.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="1000 Hours">
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600&display=swap');
-:root {
-  --salmon: #F79F77;
-  --light-blue: #80BEF5;
-  --pale-yellow: #F6D58A;
-  --black: #010101;
-  --white: #FFFFFF;
-  --light-gray: #F5F5F5;
-}
-body {
-  font-family:'Raleway',sans-serif; color:var(--black); line-height:1.6;
-  padding:20px; background-color:var(--white);
-}
-.container {
-  max-width:1000px; margin:0 auto; background:var(--white);
-  border-radius:20px; padding:25px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.1); position:relative;
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🌲 1000 Hours</title>
+  <link rel="apple-touch-icon" href="logo2.png">
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="1000 Hours"/>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600&display=swap');
+    :root {
+      --salmon: #F79F77;
+      --light-blue: #80BEF5;
+      --pale-yellow: #F6D58A;
+      --black: #010101;
+      --white: #FFFFFF;
+      --light-gray: #F5F5F5;
+    }
+    body {
+      font-family: 'Raleway', sans-serif;
+      color: var(--black);
+      line-height: 1.6;
+      padding: 20px;
+      background-color: var(--white);
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: var(--white);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      position: relative;
+    }
 
-.goal-card.full-width-goal {
-    width: 90%;
-    max-width: 90%;
-}
-h1 {
-  font-size:40px; color:var(--black); text-align:center;
-  margin-bottom:1.5rem; font-weight:700;
-}
-.corner-buttons {
-  position:absolute; top:10px; right:10px; display:flex; gap:10px;
-}
-.corner-button {
-  padding:5px 10px; font-size:12px; background-color:transparent;
-  color:var(--black); border:none; border-radius:5px; cursor:pointer;
-  transition:background-color 0.3s ease;
-}
-.corner-button:hover {
-  background-color:rgba(128,190,245,0.2);
-}
-.goal-form, .task-form {
-  display:none; background:var(--light-gray); padding:10px; border-radius:10px;
-  position:absolute; top:40px; right:10px; z-index:999;
-}
-.goal-form input, .task-form input {
-  width:calc(100% - 2rem); padding:12px 15px;
-  border:2px solid var(--light-blue); border-radius:10px;
-  font-size:16px; margin-bottom:15px;
-}
-.goal-form button, .task-form button {
-  background:var(--black); color:var(--white); border:none;
-  padding:10px; border-radius:10px; font-size:14px; font-weight:600;
-  cursor:pointer; transition:all 0.3s ease;
-}
-.goal-form button:hover, .task-form button:hover {
-  background:var(--salmon);
-}
-.search-bar {
-  width:calc(100% - 2rem); padding:12px 15px;
-  border:2px solid var(--light-blue); border-radius:10px;
-  font-size:16px; margin-bottom:15px; transition:all 0.3s ease;
-}
-button, .small-button {
-  background:var(--black); color:var(--white); border:none;
-  padding:12px 20px; border-radius:10px; font-size:16px; font-weight:600;
-  cursor:pointer; transition:all 0.3s ease;
-}
-button:hover, .small-button:hover {
-  background:var(--salmon); transform:translateY(-2px);
-}
-button:active, .small-button:active {
-  transform:translateY(1px);
-}
-#csvInput {
-  display:none;
-}
-.task {
-  background:var(--light-gray); border:none; border-radius:15px;
-  padding:20px; margin-bottom:20px; transition:all 0.3s ease;
-}
-.task-header {
-  display:flex; justify-content:space-between; align-items:center;
-  margin-bottom:15px;
-}
-.task-title {
-  font-size:20px; font-weight:600; color:var(--black);
-}
-.progress-bar {
-  position:relative; height:16px; background:var(--white);
-  border-radius:8px; overflow:hidden; margin:15px 0;
-}
-.progress {
-  height:100%;
-  background:linear-gradient(45deg, var(--salmon), var(--light-blue), var(--pale-yellow));
-}
-.progress-text {
-  position:absolute; width:100%; top:0; left:0; height:100%;
-  display:flex; justify-content:center; align-items:center;
-  font-size:10px; color:var(--black); font-weight:600;
-}
-.increment-buttons {
-  display:flex; gap:10px; flex-wrap:wrap;
-}
-.increment-buttons button {
-  padding:8px 12px; font-size:12px; flex:1; min-width:70px;
-}
-.edit-form {
-  display:flex; flex-direction:column; gap:10px;
-  margin-top:15px;
-}
-.tag-pill {
-  display:inline-block; background:var(--light-blue); color:var(--white);
-  padding:3px 8px; border-radius:8px; font-size:12px; font-weight:600;
-  cursor:pointer; transition:background 0.3s; margin-right:5px; margin-bottom:5px;
-}
-.tag-pill.selected {
-  background:var(--salmon);
-}
-#congratsMessage {
-  position:fixed; top:0; left:0; width:100%; background:#4CAF50;
-  color:white; text-align:center; padding:10px; z-index:1000;
-  display:none;
-}
-.goals-list {
-  margin-bottom:8px;
-}
-.goals-list h2 {
-  font-size:20px; margin-bottom:10px; font-weight:600;
-}
-.goals-scroll {
-  display:flex; gap:20px; overflow-x:auto; white-space:nowrap; padding-bottom:10px;
-}
-.goal-card {
-  background:var(--light-gray); border-radius:10px; padding:15px;
-  min-width:200px; flex:0 0 auto; position:relative;
-}
-.goal-card h3 {
-  font-size:16px; font-weight:600; color:var(--black);
-}
-.goal-progress-bar {
-  position:relative; height:16px; background:var(--white);
-  border-radius:8px; overflow:hidden; margin-bottom:10px;
-}
-.goal-progress {
-  height:100%;
-  background:linear-gradient(45deg, var(--salmon), var(--light-blue), var(--pale-yellow));
-  transition:width 0.3s ease;
-}
-.goal-progress-text {
-  position:absolute; width:100%; top:0; left:0; height:100%;
-  display:flex; justify-content:center; align-items:center;
-  font-size:10px; color:var(--black); font-weight:600;
-}
-.edit-delete-btns {
-  position:absolute; top:10px; right:10px; display:flex; gap:5px;
-}
-.edit-delete-btns button {
-  background:none; border:none; cursor:pointer; font-size:12px;
-  color:var(--black); padding:3px 5px; border-radius:5px;
-}
-.edit-delete-btns button:hover {
-  background:var(--light-blue); color:var(--white);
-}
-</style>
+    .goal-card.full-width-goal {
+      width: 90%;
+      max-width: 90%;
+    }
+    h1 {
+      font-size: 40px;
+      color: var(--black);
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+    }
+    .corner-buttons {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      gap: 10px;
+    }
+    .corner-button {
+      padding: 5px 10px;
+      font-size: 12px;
+      background-color: transparent;
+      color: var(--black);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .corner-button:hover {
+      background-color: rgba(128,190,245,0.2);
+    }
+    .goal-form, .task-form {
+      display: none;
+      background: var(--light-gray);
+      padding: 10px;
+      border-radius: 10px;
+      position: absolute;
+      top: 40px;
+      right: 10px;
+      z-index: 999;
+    }
+    .goal-form input,
+    .task-form input {
+      width: calc(100% - 2rem);
+      padding: 12px 15px;
+      border: 2px solid var(--light-blue);
+      border-radius: 10px;
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+    .goal-form button,
+    .task-form button {
+      background: var(--black);
+      color: var(--white);
+      border: none;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .goal-form button:hover,
+    .task-form button:hover {
+      background: var(--salmon);
+    }
+    .search-bar {
+      width: calc(100% - 2rem);
+      padding: 12px 15px;
+      border: 2px solid var(--light-blue);
+      border-radius: 10px;
+      font-size: 16px;
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+    }
+    button,
+    .small-button {
+      background: var(--black);
+      color: var(--white);
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    button:hover,
+    .small-button:hover {
+      background: var(--salmon);
+      transform: translateY(-2px);
+    }
+    button:active,
+    .small-button:active {
+      transform: translateY(1px);
+    }
+    #csvInput {
+      display: none;
+    }
+    .task {
+      background: var(--light-gray);
+      border: none;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+    .task-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .task-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--black);
+    }
+    .progress-bar {
+      position: relative;
+      height: 16px;
+      background: var(--white);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 15px 0;
+    }
+    .progress {
+      height: 100%;
+      background: linear-gradient(
+        45deg,
+        var(--salmon),
+        var(--light-blue),
+        var(--pale-yellow)
+      );
+    }
+    .progress-text {
+      position: absolute;
+      width: 100%;
+      top: 0;
+      left: 0;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 10px;
+      color: var(--black);
+      font-weight: 600;
+    }
+    .increment-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .increment-buttons button {
+      padding: 8px 12px;
+      font-size: 12px;
+      flex: 1;
+      min-width: 70px;
+    }
+    .edit-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .tag-pill {
+      display: inline-block;
+      background: var(--light-blue);
+      color: var(--white);
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+    .tag-pill.selected {
+      background: var(--salmon);
+    }
+    #congratsMessage {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #4CAF50;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      z-index: 1000;
+      display: none;
+    }
+    .goals-list {
+      margin-bottom: 8px;
+    }
+    .goals-list h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    .goals-scroll {
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding-bottom: 10px;
+    }
+    .goal-card {
+      background: var(--light-gray);
+      border-radius: 10px;
+      padding: 15px;
+      min-width: 200px;
+      flex: 0 0 auto;
+      position: relative;
+    }
+    .goal-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--black);
+    }
+    .goal-progress-bar {
+      position: relative;
+      height: 16px;
+      background: var(--white);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .goal-progress {
+      height: 100%;
+      background: linear-gradient(
+        45deg,
+        var(--salmon),
+        var(--light-blue),
+        var(--pale-yellow)
+      );
+      transition: width 0.3s ease;
+    }
+    .goal-progress-text {
+      position: absolute;
+      width: 100%;
+      top: 0;
+      left: 0;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 10px;
+      color: var(--black);
+      font-weight: 600;
+    }
+    .edit-delete-btns {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      gap: 5px;
+    }
+    .edit-delete-btns button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      color: var(--black);
+      padding: 3px 5px;
+      border-radius: 5px;
+    }
+    .edit-delete-btns button:hover {
+      background: var(--light-blue);
+      color: var(--white);
+    }
+  </style>
 </head>
 <body>
-<div id="congratsMessage"></div>
-<div class="container">
+  <div id="congratsMessage"></div>
+
+  <div class="container">
     <div class="corner-buttons">
-        <button class="corner-button" onclick="toggleGoalForm()">+ Goal</button>
-        <button class="corner-button" onclick="toggleTaskForm()">+ Task</button>
+      <button class="corner-button" onclick="toggleGoalForm()">+ Goal</button>
+      <button class="corner-button" onclick="toggleTaskForm()">+ Task</button>
     </div>
 
     <div class="goal-form" id="goalForm">
-        <input type="text" id="newGoalInput" placeholder="Enter new goal name">
-        <button onclick="createGoal()">Add</button>
+      <input type="text" id="newGoalInput" placeholder="Enter new goal name" />
+      <button onclick="createGoal()">Add</button>
     </div>
 
     <div class="task-form" id="taskForm">
-        <input type="text" id="newTaskName" placeholder="Enter new task name">
-        <input type="number" id="newTaskGoal" placeholder="Task goal (number)">
-        <p>Select Goals (Tags):</p>
-        <div id="newTaskGoalsContainer"></div>
-        <button onclick="addTask()">Add</button>
+      <input type="text" id="newTaskName" placeholder="Enter new task name" />
+      <input type="number" id="newTaskGoal" placeholder="Task goal (number)" />
+      <p>Select Goals (Tags):</p>
+      <div id="newTaskGoalsContainer"></div>
+      <button onclick="addTask()">Add</button>
     </div>
 
     <h1 id="bigGoalTitle"></h1>
 
     <div class="goals-list" style="display:none;">
-        <h2>Goals</h2>
-        <div class="goals-scroll" id="goalsContainer"></div>
+      <h2>Goals</h2>
+      <div class="goals-scroll" id="goalsContainer"></div>
     </div>
 
-    <input type="text" id="searchInput" class="search-bar" placeholder="Search tasks...">
+    <input type="text" id="searchInput" class="search-bar" placeholder="Search tasks..." />
     <div id="taskList"></div>
-    <div class="button-group">
-        <label for="csvInput" id="csvLabel" class="small-button">Import</label>
-        <input type="file" id="csvInput" accept=".xlsx">
-        <button onclick="exportXLSX()" class="small-button">Export</button>
-        <button onclick="clearStorage()" class="small-button">Clear</button>
-    </div>
-</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-<script>
+    <div class="button-group">
+      <label for="csvInput" id="csvLabel" class="small-button">Import</label>
+      <input type="file" id="csvInput" accept=".xlsx" />
+      <button onclick="exportXLSX()" class="small-button">Export</button>
+      <button onclick="clearStorage()" class="small-button">Clear</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script>
     let BIG_GOAL_NAME = "1000 Hours";
     let GOAL_TOTAL_HOURS = 1000;
     let GOAL_WEEKLY_HOURS = 21;
@@ -234,565 +373,611 @@ button:active, .small-button:active {
     const bigGoalTitle = document.getElementById('bigGoalTitle');
 
     function toggleGoalForm() {
-        goalForm.style.display = (goalForm.style.display === 'none' || goalForm.style.display === '') ? 'block' : 'none';
-        taskForm.style.display = 'none'; 
+      goalForm.style.display =
+        goalForm.style.display === 'none' || goalForm.style.display === ''
+          ? 'block'
+          : 'none';
+      taskForm.style.display = 'none';
     }
 
     function toggleTaskForm() {
-        taskForm.style.display = (taskForm.style.display === 'none' || taskForm.style.display === '') ? 'block' : 'none';
-        goalForm.style.display = 'none';
+      taskForm.style.display =
+        taskForm.style.display === 'none' || taskForm.style.display === ''
+          ? 'block'
+          : 'none';
+      goalForm.style.display = 'none';
 
-        newTaskGoalsContainer.innerHTML = '';
-        const goalNames = Object.keys(goals);
-        if (goalNames.length > 0) {
-            goalNames.forEach(gName => {
-                const pill = document.createElement('span');
-                pill.className = 'tag-pill';
-                pill.textContent = gName;
-                pill.onclick = () => pill.classList.toggle('selected');
-                newTaskGoalsContainer.appendChild(pill);
-            });
-        } else {
-            const noGoalsMsg = document.createElement('p');
-            noGoalsMsg.textContent = 'No goals defined yet.';
-            newTaskGoalsContainer.appendChild(noGoalsMsg);
-        }
+      newTaskGoalsContainer.innerHTML = '';
+      const goalNames = Object.keys(goals);
+      if (goalNames.length > 0) {
+        goalNames.forEach((gName) => {
+          const pill = document.createElement('span');
+          pill.className = 'tag-pill';
+          pill.textContent = gName;
+          pill.onclick = () => pill.classList.toggle('selected');
+          newTaskGoalsContainer.appendChild(pill);
+        });
+      } else {
+        const noGoalsMsg = document.createElement('p');
+        noGoalsMsg.textContent = 'No goals defined yet.';
+        newTaskGoalsContainer.appendChild(noGoalsMsg);
+      }
     }
 
     function saveGoals() {
-        localStorage.setItem('goals', JSON.stringify(goals));
-        console.log("Goals saved:", goals);
+      localStorage.setItem('goals', JSON.stringify(goals));
+      console.log('Goals saved:', goals);
     }
 
     function saveTasks() {
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-        localStorage.setItem('weeklyProgress', JSON.stringify(weeklyProgress));
-        console.log("Tasks saved:", tasks);
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      localStorage.setItem('weeklyProgress', JSON.stringify(weeklyProgress));
+      console.log('Tasks saved:', tasks);
     }
 
     function recalcGoalsFromTasks() {
-        // Recalculate goals from tasks' timeSpent
-        let oldGoals = goals; // Keep a reference if needed
-        goals = {};
-        tasks.forEach(task => {
-            if (task.tags && task.tags.length > 0) {
-                task.tags.forEach(tag => {
-                    if (!goals[tag]) goals[tag] = { totalMinutes:0, weeklyMinutes:0, weeklyBaseline:0 };
-                    goals[tag].totalMinutes += task.timeSpent;
-                });
-            }
-        });
-
-        // After we have totalMinutes, compute weeklyMinutes as totalMinutes - weeklyBaseline
-        for (const gName in goals) {
-            // If we had oldGoals data, keep the old weeklyBaseline if it exists
-            if (oldGoals[gName] && typeof oldGoals[gName].weeklyBaseline === 'number') {
-                goals[gName].weeklyBaseline = oldGoals[gName].weeklyBaseline;
-            } else {
-                // If no baseline is present, initialize baseline to current total
-                goals[gName].weeklyBaseline = goals[gName].totalMinutes;
-            }
-            goals[gName].weeklyMinutes = goals[gName].totalMinutes - goals[gName].weeklyBaseline;
+      // Recalculate goals from tasks' timeSpent
+      let oldGoals = goals;
+      goals = {};
+      tasks.forEach((task) => {
+        if (task.tags && task.tags.length > 0) {
+          task.tags.forEach((tag) => {
+            if (!goals[tag])
+              goals[tag] = { totalMinutes: 0, weeklyMinutes: 0, weeklyBaseline: 0 };
+            goals[tag].totalMinutes += task.timeSpent;
+          });
         }
+      });
 
-        saveGoals();
-        console.log("Goals recalculated from tasks");
+      // After we have totalMinutes, compute weeklyMinutes as totalMinutes - weeklyBaseline
+      for (const gName in goals) {
+        // If we had oldGoals data, keep the old weeklyBaseline if it exists
+        if (oldGoals[gName] && typeof oldGoals[gName].weeklyBaseline === 'number') {
+          goals[gName].weeklyBaseline = oldGoals[gName].weeklyBaseline;
+        } else {
+          // If no baseline is present, initialize baseline to current total
+          goals[gName].weeklyBaseline = goals[gName].totalMinutes;
+        }
+        goals[gName].weeklyMinutes = goals[gName].totalMinutes - goals[gName].weeklyBaseline;
+      }
+
+      saveGoals();
+      console.log('Goals recalculated from tasks');
     }
 
     function createGoal() {
-        const name = newGoalInput.value.trim();
-        if (!name) {
-            alert("Goal name cannot be empty.");
-            return;
-        }
-        if (!goals[name]) {
-            goals[name] = { totalMinutes: 0, weeklyMinutes:0, weeklyBaseline:0 };
-            // Set baseline to totalMinutes (which is 0 now, fresh start)
-            goals[name].weeklyBaseline = goals[name].totalMinutes;
-            saveGoals();
-            newGoalInput.value = '';
-            toggleGoalForm();
-            renderGoals();
-        } else {
-            alert("Goal already exists.");
-        }
+      const name = newGoalInput.value.trim();
+      if (!name) {
+        alert('Goal name cannot be empty.');
+        return;
+      }
+      if (!goals[name]) {
+        goals[name] = { totalMinutes: 0, weeklyMinutes: 0, weeklyBaseline: 0 };
+        goals[name].weeklyBaseline = goals[name].totalMinutes;
+        saveGoals();
+        newGoalInput.value = '';
+        toggleGoalForm();
+        renderGoals();
+      } else {
+        alert('Goal already exists.');
+      }
     }
 
     function clearStorage() {
-        localStorage.removeItem('tasks');
-        localStorage.removeItem('weeklyProgress');
-        localStorage.removeItem('goals');
-        localStorage.removeItem('lastCelebratedMilestone');
-        tasks = [];
-        weeklyProgress = { startDate: null };
-        goals = {};
-        BIG_GOAL_NAME = "1000 Hours";
-        GOAL_TOTAL_HOURS = 1000;
-        GOAL_WEEKLY_HOURS = 21;
-        renderTasks();
-        renderGoals();
-        console.log("Storage cleared");
+      localStorage.removeItem('tasks');
+      localStorage.removeItem('weeklyProgress');
+      localStorage.removeItem('goals');
+      localStorage.removeItem('lastCelebratedMilestone');
+      tasks = [];
+      weeklyProgress = { startDate: null };
+      goals = {};
+      BIG_GOAL_NAME = '1000 Hours';
+      GOAL_TOTAL_HOURS = 1000;
+      GOAL_WEEKLY_HOURS = 21;
+      renderTasks();
+      renderGoals();
+      console.log('Storage cleared');
     }
 
     function shouldResetWeeklyProgress(currentDate, lastResetDate) {
-        if (!lastResetDate) return true;
-        const lastResetDay = new Date(lastResetDate).getDay();
-        const currentDay = currentDate.getDay();
-        return (currentDay === 1 && lastResetDay !== 1) ||
-               (currentDate - new Date(lastResetDate) > 7 * 24 * 60 * 60 * 1000);
+      if (!lastResetDate) return true;
+      const lastResetDay = new Date(lastResetDate).getDay();
+      const currentDay = currentDate.getDay();
+      return (
+        (currentDay === 1 && lastResetDay !== 1) ||
+        currentDate - new Date(lastResetDate) > 7 * 24 * 60 * 60 * 1000
+      );
     }
 
     function resetWeeklyProgress(now) {
-        const monday = new Date(now);
-        monday.setDate(now.getDate() - now.getDay() + 1);
-        monday.setHours(0, 0, 0, 0);
-        weeklyProgress = { startDate: monday.toISOString() };
-        localStorage.setItem('weeklyProgress', JSON.stringify(weeklyProgress));
+      const monday = new Date(now);
+      monday.setDate(now.getDate() - now.getDay() + 1);
+      monday.setHours(0, 0, 0, 0);
+      weeklyProgress = { startDate: monday.toISOString() };
+      localStorage.setItem('weeklyProgress', JSON.stringify(weeklyProgress));
 
-        for (const gName in goals) {
-            // set weeklyBaseline to current totalMinutes to start fresh
-            goals[gName].weeklyBaseline = goals[gName].totalMinutes;
-        }
-        saveGoals();
-        console.log("Weekly progress reset");
+      for (const gName in goals) {
+        // set weeklyBaseline to current totalMinutes to start fresh
+        goals[gName].weeklyBaseline = goals[gName].totalMinutes;
+      }
+      saveGoals();
+      console.log('Weekly progress reset');
     }
 
     function renderGoals() {
-        goalsContainer.innerHTML = ''; // Clear the container before rendering
-        const goalNames = Object.keys(goals);
+      goalsContainer.innerHTML = '';
+      const goalNames = Object.keys(goals);
 
-        if (goalNames.length > 0) {
-            goalsListDiv.style.display = 'block'; // Make sure the goals list is visible
+      if (goalNames.length > 0) {
+        goalsListDiv.style.display = 'block';
 
-            if (goalNames.length === 1) {
-                // Handle one goal case
-                const gName = goalNames[0];
-                const gData = goals[gName];
-                const overallPerc = Math.min((gData.totalMinutes / (GOAL_TOTAL_HOURS * 60)) * 100, 100);
-                const weeklyPerc = Math.min((gData.weeklyMinutes / (GOAL_WEEKLY_HOURS * 60)) * 100, 100);
-                const totalHours = Math.floor(gData.totalMinutes / 60);
-                const weeklyHours = Math.floor(gData.weeklyMinutes / 60);
+        if (goalNames.length === 1) {
+          // Handle one goal case
+          const gName = goalNames[0];
+          const gData = goals[gName];
+          const overallPerc = Math.min(
+            (gData.totalMinutes / (GOAL_TOTAL_HOURS * 60)) * 100,
+            100
+          );
+          const weeklyPerc = Math.min(
+            (gData.weeklyMinutes / (GOAL_WEEKLY_HOURS * 60)) * 100,
+            100
+          );
+          const totalHours = Math.floor(gData.totalMinutes / 60);
+          const weeklyHours = Math.floor(gData.weeklyMinutes / 60);
 
-                const goalCard = document.createElement('div');
-                goalCard.className = 'goal-card full-width-goal';
-                goalCard.innerHTML = `
-                    <h3>${gName}</h3>
-                    <div class="goal-progress-bar">
-                        <div class="goal-progress" style="width: ${overallPerc}%"></div>
-                        <div class="goal-progress-text">${totalHours}/${GOAL_TOTAL_HOURS}</div>
-                    </div>
-                    <div class="goal-progress-bar">
-                        <div class="goal-progress" style="width: ${weeklyPerc}%"></div>
-                        <div class="goal-progress-text">${weeklyHours}/${GOAL_WEEKLY_HOURS}</div>
-                    </div>
-                    <div class="edit-delete-btns">
-                        <button onclick="startEditGoal('${gName}')">✏️</button>
-                        <button onclick="deleteGoal('${gName}')">🗑️</button>
-                    </div>
-                `;
-                goalsContainer.appendChild(goalCard);
-            } else {
-                goalNames.forEach((gName) => {
-                    const gData = goals[gName];
-                    const overallPerc = Math.min((gData.totalMinutes / (GOAL_TOTAL_HOURS * 60)) * 100, 100);
-                    const weeklyPerc = Math.min((gData.weeklyMinutes / (GOAL_WEEKLY_HOURS * 60)) * 100, 100);
-                    const totalHours = Math.floor(gData.totalMinutes / 60);
-                    const weeklyHours = Math.floor(gData.weeklyMinutes / 60);
-
-                    const goalCard = document.createElement('div');
-                    goalCard.className = 'goal-card';
-                    goalCard.innerHTML = `
-                        <h3>${gName}</h3>
-                        <div class="goal-progress-bar">
-                            <div class="goal-progress" style="width: ${overallPerc}%"></div>
-                            <div class="goal-progress-text">${totalHours}/${GOAL_TOTAL_HOURS}</div>
-                        </div>
-                        <div class="goal-progress-bar">
-                            <div class="goal-progress" style="width: ${weeklyPerc}%"></div>
-                            <div class="goal-progress-text">${weeklyHours}/${GOAL_WEEKLY_HOURS}</div>
-                        </div>
-                        <div class="edit-delete-btns">
-                            <button onclick="startEditGoal('${gName}')">✏️</button>
-                            <button onclick="deleteGoal('${gName}')">🗑️</button>
-                        </div>
-                    `;
-                    goalsContainer.appendChild(goalCard);
-                });
-            }
+          const goalCard = document.createElement('div');
+          goalCard.className = 'goal-card full-width-goal';
+          goalCard.innerHTML = `
+            <h3>${gName}</h3>
+            <div class="goal-progress-bar">
+              <div class="goal-progress" style="width: ${overallPerc}%"></div>
+              <div class="goal-progress-text">${totalHours}/${GOAL_TOTAL_HOURS}</div>
+            </div>
+            <div class="goal-progress-bar">
+              <div class="goal-progress" style="width: ${weeklyPerc}%"></div>
+              <div class="goal-progress-text">${weeklyHours}/${GOAL_WEEKLY_HOURS}</div>
+            </div>
+            <div class="edit-delete-btns">
+              <button onclick="startEditGoal('${gName}')">✏️</button>
+              <button onclick="deleteGoal('${gName}')">🗑️</button>
+            </div>
+          `;
+          goalsContainer.appendChild(goalCard);
         } else {
-            goalsListDiv.style.display = 'none';
-            console.log("No goals available.");
+          goalNames.forEach((gName) => {
+            const gData = goals[gName];
+            const overallPerc = Math.min(
+              (gData.totalMinutes / (GOAL_TOTAL_HOURS * 60)) * 100,
+              100
+            );
+            const weeklyPerc = Math.min(
+              (gData.weeklyMinutes / (GOAL_WEEKLY_HOURS * 60)) * 100,
+              100
+            );
+            const totalHours = Math.floor(gData.totalMinutes / 60);
+            const weeklyHours = Math.floor(gData.weeklyMinutes / 60);
+
+            const goalCard = document.createElement('div');
+            goalCard.className = 'goal-card';
+            goalCard.innerHTML = `
+              <h3>${gName}</h3>
+              <div class="goal-progress-bar">
+                <div class="goal-progress" style="width: ${overallPerc}%"></div>
+                <div class="goal-progress-text">${totalHours}/${GOAL_TOTAL_HOURS}</div>
+              </div>
+              <div class="goal-progress-bar">
+                <div class="goal-progress" style="width: ${weeklyPerc}%"></div>
+                <div class="goal-progress-text">${weeklyHours}/${GOAL_WEEKLY_HOURS}</div>
+              </div>
+              <div class="edit-delete-btns">
+                <button onclick="startEditGoal('${gName}')">✏️</button>
+                <button onclick="deleteGoal('${gName}')">🗑️</button>
+              </div>
+            `;
+            goalsContainer.appendChild(goalCard);
+          });
         }
+      } else {
+        goalsListDiv.style.display = 'none';
+        console.log('No goals available.');
+      }
     }
 
     function startEditGoal(oldName) {
-        const goalCard = Array.from(goalsContainer.children).find(c => c.querySelector('h3') && c.querySelector('h3').textContent === oldName);
-        if (!goalCard) return;
-        const newNameInput = document.createElement('input');
-        newNameInput.value = oldName;
-        const saveBtn = document.createElement('button');
-        saveBtn.textContent = 'Save';
-        saveBtn.onclick = () => renameGoal(oldName, newNameInput.value.trim());
+      const goalCard = Array.from(goalsContainer.children).find(
+        (c) => c.querySelector('h3') && c.querySelector('h3').textContent === oldName
+      );
+      if (!goalCard) return;
+      const newNameInput = document.createElement('input');
+      newNameInput.value = oldName;
+      const saveBtn = document.createElement('button');
+      saveBtn.textContent = 'Save';
+      saveBtn.onclick = () => renameGoal(oldName, newNameInput.value.trim());
 
-        const editDiv = document.createElement('div');
-        editDiv.className = 'edit-form-inline';
-        editDiv.appendChild(newNameInput);
-        editDiv.appendChild(saveBtn);
+      const editDiv = document.createElement('div');
+      editDiv.className = 'edit-form-inline';
+      editDiv.appendChild(newNameInput);
+      editDiv.appendChild(saveBtn);
 
-        const h3 = goalCard.querySelector('h3');
-        h3.replaceWith(editDiv);
+      const h3 = goalCard.querySelector('h3');
+      h3.replaceWith(editDiv);
     }
 
     function renameGoal(oldName, newName) {
-        if (!newName || goals[newName]) return;
-        const gData = goals[oldName];
-        delete goals[oldName];
-        goals[newName] = gData;
+      if (!newName || goals[newName]) return;
+      const gData = goals[oldName];
+      delete goals[oldName];
+      goals[newName] = gData;
 
-        tasks.forEach(task => {
-            if (task.tags && task.tags.includes(oldName)) {
-                task.tags = task.tags.map(t => t === oldName ? newName : t);
-            }
-        });
+      tasks.forEach((task) => {
+        if (task.tags && task.tags.includes(oldName)) {
+          task.tags = task.tags.map((t) => (t === oldName ? newName : t));
+        }
+      });
 
-        saveGoals();
-        saveTasks();
-        recalcGoalsFromTasks();
-        renderGoals();
-        renderTasks();
+      saveGoals();
+      saveTasks();
+      recalcGoalsFromTasks();
+      renderGoals();
+      renderTasks();
     }
 
     function deleteGoal(gName) {
-        delete goals[gName];
+      // Double-check prompt before deleting goal
+      if (!confirm(`Are you sure you want to delete the goal: "${gName}"?`)) {
+        return;
+      }
 
-        tasks.forEach(task => {
-            if (task.tags) {
-                task.tags = task.tags.filter(t => t !== gName);
-            }
-        });
+      delete goals[gName];
 
-        saveGoals();
-        saveTasks();
-        recalcGoalsFromTasks();
-        renderGoals();
-        renderTasks();
+      tasks.forEach((task) => {
+        if (task.tags) {
+          task.tags = task.tags.filter((t) => t !== gName);
+        }
+      });
+
+      saveGoals();
+      saveTasks();
+      recalcGoalsFromTasks();
+      renderGoals();
+      renderTasks();
     }
 
     function addTask() {
-        const name = newTaskName.value.trim();
-        if (!name) {
-            alert("Task name cannot be empty.");
-            return;
-        }
-        const g = parseInt(newTaskGoal.value) || 0;
-        const selectedGoals = Array.from(newTaskGoalsContainer.querySelectorAll('.tag-pill.selected')).map(p => p.textContent);
+      const name = newTaskName.value.trim();
+      if (!name) {
+        alert('Task name cannot be empty.');
+        return;
+      }
+      const g = parseInt(newTaskGoal.value) || 0;
+      const selectedGoals = Array.from(
+        newTaskGoalsContainer.querySelectorAll('.tag-pill.selected')
+      ).map((p) => p.textContent);
 
-        const newTask = {
-            name,
-            timeSpent: 0,
-            goal: g,
-            progress: 0,
-            tags: selectedGoals,
-            lastUpdated: new Date().toISOString()
-        };
+      const newTask = {
+        name,
+        timeSpent: 0,
+        goal: g,
+        progress: 0,
+        tags: selectedGoals,
+        lastUpdated: new Date().toISOString()
+      };
 
-        tasks.unshift(newTask);
+      tasks.unshift(newTask);
 
-        newTaskName.value = '';
-        newTaskGoal.value = '';
-        toggleTaskForm();
-        saveTasks();
-        recalcGoalsFromTasks();
-        renderTasks();
-        console.log("Task added:", newTask);
+      newTaskName.value = '';
+      newTaskGoal.value = '';
+      toggleTaskForm();
+      saveTasks();
+      recalcGoalsFromTasks();
+      renderTasks();
+      console.log('Task added:', newTask);
     }
 
     function showCongratulation(hours) {
-        congratsMessage.textContent = `Congratulations! You've reached ${hours} hours!`;
-        congratsMessage.style.display = 'block';
-        confetti({ particleCount:100, spread:70, origin:{y:0.6} });
-        setTimeout(() => {
-            congratsMessage.style.display = 'none';
-        }, 5000);
+      congratsMessage.textContent = `Congratulations! You've reached ${hours} hours!`;
+      congratsMessage.style.display = 'block';
+      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      setTimeout(() => {
+        congratsMessage.style.display = 'none';
+      }, 5000);
     }
 
     function updateWeeklyProgress() {
-        const now = new Date();
-        if (shouldResetWeeklyProgress(now, weeklyProgress.startDate)) {
-            resetWeeklyProgress(now);
-        }
+      const now = new Date();
+      if (shouldResetWeeklyProgress(now, weeklyProgress.startDate)) {
+        resetWeeklyProgress(now);
+      }
     }
 
     function renderTasks() {
-        const searchQuery = searchInput.value.toLowerCase();
-        const taskList = document.getElementById('taskList');
-        taskList.innerHTML = '';
-        const totalMinutes = tasks.reduce((sum, task) => sum + task.timeSpent, 0);
+      const searchQuery = searchInput.value.toLowerCase();
+      const taskList = document.getElementById('taskList');
+      taskList.innerHTML = '';
+      const totalMinutes = tasks.reduce((sum, task) => sum + task.timeSpent, 0);
 
-        tasks.forEach((task, index) => {
-            if (task.name.toLowerCase().includes(searchQuery)) {
-                const progressPercentage = task.goal > 0 ? (task.progress / task.goal)*100 : 0;
-                const tagsDisplay = (task.tags && task.tags.length>0) ? `Tags: ${task.tags.join(', ')}` : '';
-                
-                // Build tag pills for the edit form
-                const tagPills = Object.keys(goals).map(gName => {
-                    const selected = task.tags && task.tags.includes(gName) ? 'selected' : '';
-                    return `<span class="tag-pill ${selected}" onclick="this.classList.toggle('selected')">${gName}</span>`;
-                }).join('');
+      tasks.forEach((task, index) => {
+        if (task.name.toLowerCase().includes(searchQuery)) {
+          const progressPercentage =
+            task.goal > 0 ? (task.progress / task.goal) * 100 : 0;
+          const tagsDisplay =
+            task.tags && task.tags.length > 0
+              ? `Tags: ${task.tags.join(', ')}`
+              : '';
 
-                const taskElement = document.createElement('div');
-                taskElement.className = 'task';
-                taskElement.innerHTML = `
-                    <div class="task-header">
-                        <span class="task-title">${task.name}</span>
-                        <div class="increment-buttons">
-                            <button class="small-button" onclick="toggleEditForm(${index})">Edit</button>
-                            <button class="small-button" onclick="deleteTask(${index})">Delete</button>
-                        </div>
-                    </div>
-                    <p>${task.timeSpent} minutes</p>
-                    <div class="progress-bar">
-                        <div class="progress" style="width: ${progressPercentage}%"></div>
-                        <div class="progress-text">${task.progress}/${task.goal}</div>
-                    </div>
-                    <p>${tagsDisplay}</p>
-                    <div class="increment-buttons">
-                        <button class="small-button" onclick="incrementTime(${index}, 1)">+1 Min</button>
-                        <button class="small-button" onclick="incrementTime(${index}, 5)">+5 Min</button>
-                        <button class="small-button" onclick="incrementTime(${index}, 10)">+10 Min</button>
-                        <button class="small-button" onclick="incrementProgress(${index})">+1 Prog</button>
-                    </div>
+          // Build tag pills for the edit form
+          const tagPills = Object.keys(goals)
+            .map((gName) => {
+              const selected =
+                task.tags && task.tags.includes(gName) ? 'selected' : '';
+              return `<span class="tag-pill ${selected}" onclick="this.classList.toggle('selected')">${gName}</span>`;
+            })
+            .join('');
 
-                    <!-- Hidden edit form for this task -->
-                    <div class="edit-form" id="editForm${index}" style="display:none;">
-                        <label>Task Name</label>
-                        <input type="text" id="editName${index}" value="${task.name}">
-                        
-                        <label>Goal</label>
-                        <input type="number" id="editGoal${index}" value="${task.goal}">
-                        
-                        <label>Progress</label>
-                        <input type="number" id="editProgress${index}" value="${task.progress}">
-                        
-                        <label>Time Spent (min)</label>
-                        <input type="number" id="editTime${index}" value="${task.timeSpent}">
-                        
-                        <p>Select Goals (Tags):</p>
-                        <div id="editTaskGoals${index}" class="editTaskGoalsContainer">
-                            ${tagPills}
-                        </div>
-                        
-                        <button class="small-button" onclick="saveEdit(${index})">Save</button>
-                    </div>
-                `;
-                taskList.appendChild(taskElement);
-            }
-        });
+          const taskElement = document.createElement('div');
+          taskElement.className = 'task';
+          taskElement.innerHTML = `
+            <div class="task-header">
+              <span class="task-title">${task.name}</span>
+              <div class="increment-buttons">
+                <button class="small-button" onclick="toggleEditForm(${index})">Edit</button>
+                <button class="small-button" onclick="deleteTask(${index})">Delete</button>
+              </div>
+            </div>
+            <p>${task.timeSpent} minutes</p>
+            <div class="progress-bar">
+              <div class="progress" style="width: ${progressPercentage}%"></div>
+              <div class="progress-text">${task.progress}/${task.goal}</div>
+            </div>
+            <p>${tagsDisplay}</p>
+            <div class="increment-buttons">
+              <button class="small-button" onclick="incrementTime(${index}, 1)">+1 Min</button>
+              <button class="small-button" onclick="incrementTime(${index}, 5)">+5 Min</button>
+              <button class="small-button" onclick="incrementTime(${index}, 10)">+10 Min</button>
+              <button class="small-button" onclick="incrementProgress(${index})">+1 Prog</button>
+            </div>
 
-        const hours = Math.floor(totalMinutes / 60);
-        const lastCelebratedMilestone = parseInt(localStorage.getItem('lastCelebratedMilestone')) || 0;
-        const milestone = Math.floor(hours / 10) * 10; // Milestones are multiples of 10 hours
+            <!-- Hidden edit form for this task -->
+            <div class="edit-form" id="editForm${index}" style="display:none;">
+              <label>Task Name</label>
+              <input type="text" id="editName${index}" value="${task.name}">
 
-        if (milestone > lastCelebratedMilestone) {
-            showCongratulation(milestone);
-            localStorage.setItem('lastCelebratedMilestone', milestone);
+              <label>Goal</label>
+              <input type="number" id="editGoal${index}" value="${task.goal}">
+
+              <label>Progress</label>
+              <input type="number" id="editProgress${index}" value="${task.progress}">
+
+              <label>Time Spent (min)</label>
+              <input type="number" id="editTime${index}" value="${task.timeSpent}">
+
+              <p>Select Goals (Tags):</p>
+              <div id="editTaskGoals${index}" class="editTaskGoalsContainer">
+                ${tagPills}
+              </div>
+
+              <button class="small-button" onclick="saveEdit(${index})">Save</button>
+            </div>
+          `;
+          taskList.appendChild(taskElement);
         }
+      });
 
-        updateWeeklyProgress();
-        renderGoals();
-        bigGoalTitle.textContent = BIG_GOAL_NAME;
-        console.log("Tasks rendered");
+      const hours = Math.floor(totalMinutes / 60);
+      const lastCelebratedMilestone =
+        parseInt(localStorage.getItem('lastCelebratedMilestone')) || 0;
+      const milestone = Math.floor(hours / 10) * 10; // Milestones are multiples of 10 hours
+
+      if (milestone > lastCelebratedMilestone) {
+        showCongratulation(milestone);
+        localStorage.setItem('lastCelebratedMilestone', milestone);
+      }
+
+      updateWeeklyProgress();
+      renderGoals();
+      bigGoalTitle.textContent = BIG_GOAL_NAME;
+      console.log('Tasks rendered');
     }
 
     function toggleEditForm(index) {
-        const editForm = document.getElementById(`editForm${index}`);
-        if (!editForm) return;
-        editForm.style.display = editForm.style.display === 'none' ? 'flex' : 'none';
+      const editForm = document.getElementById(`editForm${index}`);
+      if (!editForm) return;
+      editForm.style.display = editForm.style.display === 'none' ? 'flex' : 'none';
     }
 
     function saveEdit(index) {
-        const newName = document.getElementById(`editName${index}`).value.trim();
-        const newGoalVal = parseInt(document.getElementById(`editGoal${index}`).value) || 0;
-        const newProgress = parseInt(document.getElementById(`editProgress${index}`).value) || 0;
-        const newTime = parseInt(document.getElementById(`editTime${index}`).value) || 0;
-        const editGoalsContainer = document.getElementById(`editTaskGoals${index}`);
-        const selectedGoals = Array.from(editGoalsContainer.querySelectorAll('.tag-pill.selected')).map(p => p.textContent);
+      const newName = document.getElementById(`editName${index}`).value.trim();
+      const newGoalVal = parseInt(document.getElementById(`editGoal${index}`).value) || 0;
+      const newProgress = parseInt(document.getElementById(`editProgress${index}`).value) || 0;
+      const newTime = parseInt(document.getElementById(`editTime${index}`).value) || 0;
+      const editGoalsContainer = document.getElementById(`editTaskGoals${index}`);
+      const selectedGoals = Array.from(
+        editGoalsContainer.querySelectorAll('.tag-pill.selected')
+      ).map((p) => p.textContent);
 
-        if (!newName) {
-            alert("Task name cannot be empty.");
-            return;
-        }
-        const editedTask = tasks.splice(index, 1)[0];
-        editedTask.name = newName;
-        editedTask.goal = newGoalVal;
-        editedTask.progress = newProgress;
-        editedTask.timeSpent = newTime;
-        editedTask.tags = selectedGoals;
-        // Move edited task to top of the list
-        tasks.unshift(editedTask);
+      if (!newName) {
+        alert('Task name cannot be empty.');
+        return;
+      }
+      const editedTask = tasks.splice(index, 1)[0];
+      editedTask.name = newName;
+      editedTask.goal = newGoalVal;
+      editedTask.progress = newProgress;
+      editedTask.timeSpent = newTime;
+      editedTask.tags = selectedGoals;
+      // Move edited task to top of the list
+      tasks.unshift(editedTask);
 
-        saveTasks();
-        recalcGoalsFromTasks();
-        renderTasks();
-        console.log("Task edited and moved to top:", editedTask);
+      saveTasks();
+      recalcGoalsFromTasks();
+      renderTasks();
+      console.log('Task edited and moved to top:', editedTask);
     }
 
     function deleteTask(index) {
-        const removed = tasks.splice(index, 1)[0];
-        console.log("Task deleted:", removed);
-        saveTasks();
-        recalcGoalsFromTasks();
-        renderTasks();
+      // Double-check prompt before deleting a task
+      if (!confirm(`Are you sure you want to delete the task: "${tasks[index].name}"?`)) {
+        return;
+      }
+      const removed = tasks.splice(index, 1)[0];
+      console.log('Task deleted:', removed);
+      saveTasks();
+      recalcGoalsFromTasks();
+      renderTasks();
     }
 
     function incrementProgress(index) {
-        const updatedTask = tasks.splice(index,1)[0];
-        updatedTask.progress++;
-        tasks.unshift(updatedTask);
-        console.log("Incrementing progress for task:", updatedTask.name);
-        saveTasks();
-        recalcGoalsFromTasks();
-        renderTasks();
+      const updatedTask = tasks.splice(index, 1)[0];
+      updatedTask.progress++;
+      tasks.unshift(updatedTask);
+      console.log('Incrementing progress for task:', updatedTask.name);
+      saveTasks();
+      recalcGoalsFromTasks();
+      renderTasks();
     }
 
     function incrementTime(index, minutes) {
-        const updatedTask = tasks.splice(index,1)[0];
-        updatedTask.timeSpent += minutes;
-        tasks.unshift(updatedTask);
-        console.log("Incrementing time by", minutes, "for task:", updatedTask.name);
-        saveTasks();
-        recalcGoalsFromTasks();
-        renderTasks();
+      const updatedTask = tasks.splice(index, 1)[0];
+      updatedTask.timeSpent += minutes;
+      tasks.unshift(updatedTask);
+      console.log('Incrementing time by', minutes, 'for task:', updatedTask.name);
+      saveTasks();
+      recalcGoalsFromTasks();
+      renderTasks();
     }
 
     async function importXLSX(event) {
-        try {
-            console.log("Starting import...");
-            const file = event.target.files[0];
-            if (!file) {
-                console.warn("No file selected for import.");
-                return;
-            }
-            const data = await file.arrayBuffer();
-            const workbook = XLSX.read(data, { type: 'array' });
-
-            if (!workbook.SheetNames.includes('Tasks')) {
-                alert("The imported file does not have a 'Tasks' sheet. Cannot import.");
-                console.warn("No 'Tasks' sheet found.");
-                return;
-            }
-
-            const taskSheet = workbook.Sheets['Tasks'];
-            const taskJson = XLSX.utils.sheet_to_json(taskSheet);
-            console.log("Tasks data from sheet:", taskJson);
-
-            const requiredColumns = ["Name","Goal","Progress","TimeSpent","Tags"];
-            const sheetHeaders = Object.keys(taskJson[0] || {});
-            for (let col of requiredColumns) {
-                if (!sheetHeaders.includes(col)) {
-                    alert(`Missing required column '${col}' in 'Tasks' sheet. Cannot import.`);
-                    console.warn("Missing column:", col);
-                    return;
-                }
-            }
-
-            let importedTasks = taskJson.map(row => {
-                const name = row.Name || '';
-                const goal = parseInt(row.Goal) || 0;
-                const progress = parseInt(row.Progress) || 0;
-                const timeSpent = parseInt(row.TimeSpent) || 0;
-                const tags = row.Tags ? row.Tags.split(',').map(t=>t.trim()).filter(t=>t) : [];
-
-                return {
-                    name,
-                    goal,
-                    progress,
-                    timeSpent,
-                    tags,
-                    lastUpdated: new Date().toISOString()
-                };
-            });
-
-            if (importedTasks.length === 0) {
-                alert("No tasks found in the 'Tasks' sheet. Nothing imported.");
-                console.warn("Tasks sheet was empty");
-                return;
-            }
-
-            tasks = importedTasks;
-            saveTasks();
-            recalcGoalsFromTasks();
-            renderTasks();
-            renderGoals();
-
-            alert(`Import completed! Imported ${importedTasks.length} tasks and recalculated goals from tags.`);
-            console.log("Import finished successfully. Tasks imported:", importedTasks.length);
-
-        } catch (err) {
-            console.error("Error importing the XLSX file:", err);
-            alert("Failed to import the XLSX file. Check console for details.");
-        } finally {
-            csvInput.value = '';
+      try {
+        console.log('Starting import...');
+        const file = event.target.files[0];
+        if (!file) {
+          console.warn('No file selected for import.');
+          return;
         }
-    }
+        const data = await file.arrayBuffer();
+        const workbook = XLSX.read(data, { type: 'array' });
 
-    function exportXLSX() {
-        console.log("Starting export...");
-        const dataToExportTasks = tasks.map(task => ({
-            Name: task.name,
-            Goal: task.goal,
-            Progress: task.progress,
-            TimeSpent: task.timeSpent,
-            Tags: task.tags ? task.tags.join(', ') : ''
-        }));
-        const worksheetTasks = XLSX.utils.json_to_sheet(dataToExportTasks);
-        
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheetTasks, 'Tasks');
-        
-        XLSX.writeFile(workbook, 'data.xlsx');
-        console.log("Export completed successfully.");
-        alert("Export completed successfully!");
-    }
-
-    function loadData() {
-        console.log("Loading data from localStorage...");
-        const savedTasks = localStorage.getItem('tasks');
-        const savedWeeklyProgress = localStorage.getItem('weeklyProgress');
-        const savedGoals = localStorage.getItem('goals');
-
-        if (savedTasks) {
-            tasks = JSON.parse(savedTasks);
-            console.log("Loaded tasks:", tasks);
-        }
-        if (savedWeeklyProgress) {
-            weeklyProgress = JSON.parse(savedWeeklyProgress);
-        } else {
-            weeklyProgress = { startDate: null };
-        }
-        if (savedGoals) {
-            goals = JSON.parse(savedGoals);
-            console.log("Loaded goals:", goals);
+        if (!workbook.SheetNames.includes('Tasks')) {
+          alert("The imported file does not have a 'Tasks' sheet. Cannot import.");
+          console.warn("No 'Tasks' sheet found.");
+          return;
         }
 
-        recalcGoalsFromTasks(); // Always re-derive goals from tasks
+        const taskSheet = workbook.Sheets['Tasks'];
+        const taskJson = XLSX.utils.sheet_to_json(taskSheet);
+        console.log('Tasks data from sheet:', taskJson);
 
-        bigGoalTitle.textContent = BIG_GOAL_NAME;
-
-        const now = new Date();
-        if (shouldResetWeeklyProgress(now, weeklyProgress.startDate)) {
-            resetWeeklyProgress(now);
+        const requiredColumns = ['Name', 'Goal', 'Progress', 'TimeSpent', 'Tags'];
+        const sheetHeaders = Object.keys(taskJson[0] || {});
+        for (let col of requiredColumns) {
+          if (!sheetHeaders.includes(col)) {
+            alert(`Missing required column '${col}' in 'Tasks' sheet. Cannot import.`);
+            console.warn('Missing column:', col);
+            return;
+          }
         }
 
+        let importedTasks = taskJson.map((row) => {
+          const name = row.Name || '';
+          const goal = parseInt(row.Goal) || 0;
+          const progress = parseInt(row.Progress) || 0;
+          const timeSpent = parseInt(row.TimeSpent) || 0;
+          const tags = row.Tags
+            ? row.Tags.split(',').map((t) => t.trim()).filter((t) => t)
+            : [];
+
+          return {
+            name,
+            goal,
+            progress,
+            timeSpent,
+            tags,
+            lastUpdated: new Date().toISOString()
+          };
+        });
+
+        if (importedTasks.length === 0) {
+          alert("No tasks found in the 'Tasks' sheet. Nothing imported.");
+          console.warn('Tasks sheet was empty');
+          return;
+        }
+
+        tasks = importedTasks;
+        saveTasks();
+        recalcGoalsFromTasks();
         renderTasks();
         renderGoals();
 
-        searchInput.addEventListener('input', renderTasks);
-        console.log("Data loaded and UI rendered");
+        alert(
+          `Import completed! Imported ${importedTasks.length} tasks and recalculated goals from tags.`
+        );
+        console.log('Import finished successfully. Tasks imported:', importedTasks.length);
+      } catch (err) {
+        console.error('Error importing the XLSX file:', err);
+        alert('Failed to import the XLSX file. Check console for details.');
+      } finally {
+        csvInput.value = '';
+      }
+    }
+
+    function exportXLSX() {
+      console.log('Starting export...');
+      const dataToExportTasks = tasks.map((task) => ({
+        Name: task.name,
+        Goal: task.goal,
+        Progress: task.progress,
+        TimeSpent: task.timeSpent,
+        Tags: task.tags ? task.tags.join(', ') : ''
+      }));
+      const worksheetTasks = XLSX.utils.json_to_sheet(dataToExportTasks);
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheetTasks, 'Tasks');
+
+      XLSX.writeFile(workbook, 'data.xlsx');
+      console.log('Export completed successfully.');
+      alert('Export completed successfully!');
+    }
+
+    function loadData() {
+      console.log('Loading data from localStorage...');
+      const savedTasks = localStorage.getItem('tasks');
+      const savedWeeklyProgress = localStorage.getItem('weeklyProgress');
+      const savedGoals = localStorage.getItem('goals');
+
+      if (savedTasks) {
+        tasks = JSON.parse(savedTasks);
+        console.log('Loaded tasks:', tasks);
+      }
+      if (savedWeeklyProgress) {
+        weeklyProgress = JSON.parse(savedWeeklyProgress);
+      } else {
+        weeklyProgress = { startDate: null };
+      }
+      if (savedGoals) {
+        goals = JSON.parse(savedGoals);
+        console.log('Loaded goals:', goals);
+      }
+
+      recalcGoalsFromTasks(); // Always re-derive goals from tasks
+
+      bigGoalTitle.textContent = BIG_GOAL_NAME;
+
+      const now = new Date();
+      if (shouldResetWeeklyProgress(now, weeklyProgress.startDate)) {
+        resetWeeklyProgress(now);
+      }
+
+      renderTasks();
+      renderGoals();
+
+      searchInput.addEventListener('input', renderTasks);
+      console.log('Data loaded and UI rendered');
     }
 
     csvInput.addEventListener('change', importXLSX);
     window.addEventListener('load', loadData);
-</script>
+  </script>
 </body>
 </html>
