@@ -18,6 +18,7 @@
       --white: #FFFFFF;
       --light-gray: #F5F5F5;
     }
+    * { box-sizing: border-box; }
     body {
       font-family: 'Raleway', sans-serif;
       color: var(--black);
@@ -69,6 +70,7 @@
       top: 40px;
       right: 10px;
       z-index: 999;
+      width: 250px;
     }
     .goal-form input, .task-form input {
       width: calc(100% - 2rem);
@@ -145,12 +147,7 @@
     }
     .progress {
       height: 100%;
-      background: linear-gradient(
-        45deg,
-        var(--salmon),
-        var(--light-blue),
-        var(--pale-yellow)
-      );
+      background: linear-gradient(45deg, var(--salmon), var(--light-blue), var(--pale-yellow));
     }
     .progress-text {
       position: absolute;
@@ -244,12 +241,7 @@
     }
     .goal-progress {
       height: 100%;
-      background: linear-gradient(
-        45deg,
-        var(--salmon),
-        var(--light-blue),
-        var(--pale-yellow)
-      );
+      background: linear-gradient(45deg, var(--salmon), var(--light-blue), var(--pale-yellow));
       transition: width 0.3s ease;
     }
     .goal-progress-text {
@@ -289,7 +281,6 @@
 </head>
 <body>
   <div id="congratsMessage"></div>
-
   <div class="container">
     <div class="corner-buttons">
       <button class="corner-button" onclick="toggleGoalForm()">+ Goal</button>
@@ -350,86 +341,87 @@
     const newTaskGoal = document.getElementById('newTaskGoal');
     const newTaskGoalsContainer = document.getElementById('newTaskGoalsContainer');
 
+    /* ---------------------- UI helpers ---------------------- */
+    function buildTagPill(name, selected = false) {
+      const pill = document.createElement('span');
+      pill.className = 'tag-pill' + (selected ? ' selected' : '');
+      pill.textContent = name;
+      pill.onclick = () => pill.classList.toggle('selected');
+      return pill;
+    }
+
+    /* ---------------------- forms toggling ---------------------- */
     function toggleGoalForm() {
-      goalForm.style.display =
-        goalForm.style.display === 'none' || goalForm.style.display === ''
-          ? 'block'
-          : 'none';
+      goalForm.style.display = goalForm.style.display === 'block' ? 'none' : 'block';
       taskForm.style.display = 'none';
     }
 
     function toggleTaskForm() {
-      taskForm.style.display =
-        taskForm.style.display === 'none' || taskForm.style.display === ''
-          ? 'block'
-          : 'none';
+      taskForm.style.display = taskForm.style.display === 'block' ? 'none' : 'block';
       goalForm.style.display = 'none';
+      // refresh tag pills each time the form opens
       newTaskGoalsContainer.innerHTML = '';
       const goalNames = Object.keys(goals);
       if (goalNames.length) {
-        goalNames.forEach(gName => {
-          const pill = document.createElement('span');
-          pill.className = 'tag-pill';
-          pill.textContent = gName;
-          pill.onclick = () => pill.classList.toggle('selected');
-          newTaskGoalsContainer.appendChild(pill);
-        });
+        goalNames.forEach(name => newTaskGoalsContainer.appendChild(buildTagPill(name)));
       } else {
-        const noGoalsMsg = document.createElement('p');
-        noGoalsMsg.textContent = 'No goals defined yet.';
-        newTaskGoalsContainer.appendChild(noGoalsMsg);
+        newTaskGoalsContainer.textContent = 'No goals defined yet.';
       }
     }
 
-    function saveGoals() {
-      localStorage.setItem('goals', JSON.stringify(goals));
-    }
+    /* ---------------------- persistence helpers ---------------------- */
+    function saveGoals() { localStorage.setItem('goals', JSON.stringify(goals)); }
     function saveTasks() {
       localStorage.setItem('tasks', JSON.stringify(tasks));
       localStorage.setItem('weeklyProgress', JSON.stringify(weeklyProgress));
     }
 
+    /* ---------------------- goal calculation (FIXED) ---------------------- */
     function recalcGoalsFromTasks() {
-      const oldGoals = goals;
-      goals = {};
-      tasks.forEach(task => {
-        if (task.tags && task.tags.length) {
-          task.tags.forEach(tag => {
-            if (!goals[tag]) goals[tag] = { totalMinutes:0, weeklyMinutes:0, weeklyBaseline:0 };
-            goals[tag].totalMinutes += task.timeSpent;
-          });
-        }
+      // 1️⃣ Preserve existing goals structure so orphan goals survive
+      const updated = {};
+      Object.keys(goals).forEach(name => {
+        updated[name] = { ...goals[name], totalMinutes: 0 }; // reset totals, keep baselines
       });
-      for (const gName in goals) {
-        if (oldGoals[gName] && typeof oldGoals[gName].weeklyBaseline === 'number') {
-          goals[gName].weeklyBaseline = oldGoals[gName].weeklyBaseline;
-        } else {
-          goals[gName].weeklyBaseline = goals[gName].totalMinutes;
-        }
-        goals[gName].weeklyMinutes = goals[gName].totalMinutes - goals[gName].weeklyBaseline;
-      }
+
+      // 2️⃣ Accumulate totals from tasks
+      tasks.forEach(t => {
+        (t.tags || []).forEach(tag => {
+          if (!updated[tag]) {
+            updated[tag] = { totalMinutes: 0, weeklyBaseline: 0, weeklyMinutes: 0 };
+          }
+          updated[tag].totalMinutes += t.timeSpent;
+        });
+      });
+
+      // 3️⃣ Recompute weekly minutes & defaults
+      Object.keys(updated).forEach(name => {
+        const g = updated[name];
+        if (typeof g.weeklyBaseline !== 'number') g.weeklyBaseline = g.totalMinutes;
+        g.weeklyMinutes = g.totalMinutes - g.weeklyBaseline;
+      });
+
+      goals = updated;
       saveGoals();
     }
 
+    /* ---------------------- goal CRUD ---------------------- */
     function createGoal() {
       const name = newGoalInput.value.trim();
       if (!name) { alert('Goal name cannot be empty.'); return; }
       if (goals[name]) { alert('Goal already exists.'); return; }
-      goals[name] = { totalMinutes:0, weeklyMinutes:0, weeklyBaseline:0 };
-      goals[name].weeklyBaseline = 0;
+      goals[name] = { totalMinutes: 0, weeklyMinutes: 0, weeklyBaseline: 0 };
       saveGoals();
       newGoalInput.value = '';
       toggleGoalForm();
       renderGoals();
     }
 
-    function deleteGoal(gName) {
-      if (!confirm(`Delete goal "${gName}"?`)) return;
-      delete goals[gName];
-      localStorage.removeItem(`lastCelebratedMilestone_${gName}`);
-      tasks.forEach(task => {
-        if (task.tags) task.tags = task.tags.filter(t => t !== gName);
-      });
+    function deleteGoal(name) {
+      if (!confirm(`Delete goal "${name}"?`)) return;
+      delete goals[name];
+      localStorage.removeItem(`lastCelebratedMilestone_${name}`);
+      tasks.forEach(t => { if (t.tags) t.tags = t.tags.filter(tag => tag !== name); });
       saveGoals();
       saveTasks();
       recalcGoalsFromTasks();
@@ -437,19 +429,18 @@
       renderTasks();
     }
 
+    /* ---------------------- task CRUD ---------------------- */
     function addTask() {
       const name = newTaskName.value.trim();
       if (!name) { alert('Task name cannot be empty.'); return; }
       const goalNum = parseInt(newTaskGoal.value) || 0;
-      const selectedGoals = Array.from(
-        newTaskGoalsContainer.querySelectorAll('.tag-pill.selected')
-      ).map(p => p.textContent);
+      const selectedGoals = Array.from(newTaskGoalsContainer.querySelectorAll('.tag-pill.selected')).map(p => p.textContent);
 
       tasks.unshift({
         name,
-        timeSpent: 0,
         goal: goalNum,
         progress: 0,
+        timeSpent: 0,
         tags: selectedGoals,
         lastUpdated: new Date().toISOString()
       });
@@ -462,93 +453,103 @@
       renderTasks();
     }
 
-    function showCongratulation(msg) {
-      congratsMessage.textContent = msg;
-      congratsMessage.style.display = 'block';
-      confetti({ particleCount:100, spread:70, origin:{ y:0.6 } });
-      setTimeout(()=> congratsMessage.style.display='none', 5000);
+    function toggleEditForm(i) {
+      const f = document.getElementById(`editForm${i}`);
+      if (f) f.style.display = f.style.display === 'flex' ? 'none' : 'flex';
     }
 
+    function saveEdit(i) {
+      const n = document.getElementById(`editName${i}`).value.trim();
+      const gVal = parseInt(document.getElementById(`editGoal${i}`).value) || 0;
+      const pVal = parseInt(document.getElementById(`editProgress${i}`).value) || 0;
+      const tVal = parseInt(document.getElementById(`editTime${i}`).value) || 0;
+      const sel = Array.from(document.getElementById(`editTaskGoals${i}`).querySelectorAll('.tag-pill.selected')).map(p => p.textContent);
+      if (!n) { alert('Name cannot be empty'); return; }
+      const t = tasks.splice(i, 1)[0];
+      Object.assign(t, { name: n, goal: gVal, progress: pVal, timeSpent: tVal, tags: sel });
+      tasks.unshift(t);
+      saveTasks(); recalcGoalsFromTasks(); renderTasks();
+    }
+
+    function deleteTask(i) {
+      if (!confirm(`Delete task "${tasks[i].name}"?`)) return;
+      tasks.splice(i, 1);
+      saveTasks(); recalcGoalsFromTasks(); renderTasks();
+    }
+
+    function incrementProgress(i) {
+      const t = tasks.splice(i, 1)[0];
+      t.progress++;
+      tasks.unshift(t);
+      saveTasks(); recalcGoalsFromTasks(); renderTasks();
+    }
+
+    function incrementTime(i, mins) {
+      const t = tasks.splice(i, 1)[0];
+      t.timeSpent += mins;
+      tasks.unshift(t);
+      saveTasks(); recalcGoalsFromTasks(); renderTasks();
+    }
+
+    /* ---------------------- weekly tracking ---------------------- */
     function shouldResetWeeklyProgress(now, last) {
       if (!last) return true;
       const lastDay = new Date(last).getDay();
       const today = now.getDay();
-      return (today===1 && lastDay!==1)
-        || (now - new Date(last) > 7*24*60*60*1000);
+      return (today === 1 && lastDay !== 1) || (now - new Date(last) > 7 * 24 * 60 * 60 * 1000);
     }
+
     function resetWeeklyProgress(now) {
       const monday = new Date(now);
       monday.setDate(now.getDate() - now.getDay() + 1);
-      monday.setHours(0,0,0,0);
+      monday.setHours(0, 0, 0, 0);
       weeklyProgress = { startDate: monday.toISOString() };
       localStorage.setItem('weeklyProgress', JSON.stringify(weeklyProgress));
-      for (const gName in goals) {
-        goals[gName].weeklyBaseline = goals[gName].totalMinutes;
-      }
+      Object.keys(goals).forEach(name => goals[name].weeklyBaseline = goals[name].totalMinutes);
       saveGoals();
     }
+
     function updateWeeklyProgress() {
       const now = new Date();
-      if (shouldResetWeeklyProgress(now, weeklyProgress.startDate)) {
-        resetWeeklyProgress(now);
-      }
+      if (shouldResetWeeklyProgress(now, weeklyProgress.startDate)) resetWeeklyProgress(now);
     }
 
+    /* ---------------------- rendering ---------------------- */
     function renderGoals() {
       goalsContainer.innerHTML = '';
       const names = Object.keys(goals);
-      if (names.length) {
-        goalsListDiv.style.display = 'block';
-        if (names.length === 1) {
-          // single-goal full width
-          const gName = names[0], d = goals[gName];
-          const overall = Math.min((d.totalMinutes/(GOAL_TOTAL_HOURS*60))*100,100);
-          const weekly = Math.min((d.weeklyMinutes/(GOAL_WEEKLY_HOURS*60))*100,100);
-          const th = Math.floor(d.totalMinutes/60), wh = Math.floor(d.weeklyMinutes/60);
-          const card = document.createElement('div');
-          card.className = 'goal-card full-width-goal';
-          card.innerHTML = `
-            <h3>${gName}</h3>
-            <div class="goal-progress-bar">
-              <div class="goal-progress" style="width:${overall}%"></div>
-              <div class="goal-progress-text">${th}/${GOAL_TOTAL_HOURS}</div>
-            </div>
-            <div class="goal-progress-bar">
-              <div class="goal-progress" style="width:${weekly}%"></div>
-              <div class="goal-progress-text">${wh}/${GOAL_WEEKLY_HOURS}</div>
-            </div>
-            <div class="edit-delete-btns">
-              <button onclick="startEditGoal('${gName}')">✏️</button>
-              <button onclick="deleteGoal('${gName}')">🗑️</button>
-            </div>`;
-          goalsContainer.appendChild(card);
-        } else {
-          names.forEach(gName => {
-            const d = goals[gName];
-            const overall = Math.min((d.totalMinutes/(GOAL_TOTAL_HOURS*60))*100,100);
-            const weekly = Math.min((d.weeklyMinutes/(GOAL_WEEKLY_HOURS*60))*100,100);
-            const th = Math.floor(d.totalMinutes/60), wh = Math.floor(d.weeklyMinutes/60);
-            const card = document.createElement('div');
-            card.className = 'goal-card';
-            card.innerHTML = `
-              <h3>${gName}</h3>
-              <div class="goal-progress-bar">
-                <div class="goal-progress" style="width:${overall}%"></div>
-                <div class="goal-progress-text">${th}/${GOAL_TOTAL_HOURS}</div>
-              </div>
-              <div class="goal-progress-bar">
-                <div class="goal-progress" style="width:${weekly}%"></div>
-                <div class="goal-progress-text">${wh}/${GOAL_WEEKLY_HOURS}</div>
-              </div>
-              <div class="edit-delete-btns">
-                <button onclick="startEditGoal('${gName}')">✏️</button>
-                <button onclick="deleteGoal('${gName}')">🗑️</button>
-              </div>`;
-            goalsContainer.appendChild(card);
-          });
-        }
+      if (!names.length) { goalsListDiv.style.display = 'none'; return; }
+      goalsListDiv.style.display = 'block';
+
+      const buildCard = (gName, fullWidth = false) => {
+        const d = goals[gName];
+        const overall = Math.min((d.totalMinutes / (GOAL_TOTAL_HOURS * 60)) * 100, 100);
+        const weekly = Math.min((d.weeklyMinutes / (GOAL_WEEKLY_HOURS * 60)) * 100, 100);
+        const th = Math.floor(d.totalMinutes / 60);
+        const wh = Math.floor(d.weeklyMinutes / 60);
+        const card = document.createElement('div');
+        card.className = 'goal-card' + (fullWidth ? ' full-width-goal' : '');
+        card.innerHTML = `
+          <h3>${gName}</h3>
+          <div class="goal-progress-bar">
+            <div class="goal-progress" style="width:${overall}%"></div>
+            <div class="goal-progress-text">${th}/${GOAL_TOTAL_HOURS}</div>
+          </div>
+          <div class="goal-progress-bar">
+            <div class="goal-progress" style="width:${weekly}%"></div>
+            <div class="goal-progress-text">${wh}/${GOAL_WEEKLY_HOURS}</div>
+          </div>
+          <div class="edit-delete-btns">
+            <button onclick="startEditGoal('${gName}')">✏️</button>
+            <button onclick="deleteGoal('${gName}')">🗑️</button>
+          </div>`;
+        return card;
+      };
+
+      if (names.length === 1) {
+        goalsContainer.appendChild(buildCard(names[0], true));
       } else {
-        goalsListDiv.style.display = 'none';
+        names.forEach(name => goalsContainer.appendChild(buildCard(name)));
       }
     }
 
@@ -556,16 +557,15 @@
       const query = searchInput.value.toLowerCase();
       const list = document.getElementById('taskList');
       list.innerHTML = '';
-      const totalMinutes = tasks.reduce((s,t)=>s+t.timeSpent,0);
 
-      tasks.forEach((task,i) => {
+      tasks.forEach((task, i) => {
         if (!task.name.toLowerCase().includes(query)) return;
-        const perc = task.goal>0? (task.progress/task.goal)*100:0;
-        const tags = (task.tags&&task.tags.length)? `Tags: ${task.tags.join(', ')}`:'';
-        const tagPills = Object.keys(goals).map(gName => {
-          const sel = task.tags.includes(gName)? 'selected':''; 
-          return `<span class="tag-pill ${sel}" onclick="this.classList.toggle('selected')">${gName}</span>`;
+        const perc = task.goal > 0 ? (task.progress / task.goal) * 100 : 0;
+        const tagPills = Object.keys(goals).map(name => {
+          const sel = task.tags.includes(name);
+          return `<span class="tag-pill ${sel ? 'selected' : ''}" onclick="this.classList.toggle('selected')">${name}</span>`;
         }).join('');
+
         const el = document.createElement('div');
         el.className = 'task';
         el.innerHTML = `
@@ -581,7 +581,7 @@
             <div class="progress" style="width:${perc}%"></div>
             <div class="progress-text">${task.progress}/${task.goal}</div>
           </div>
-          <p>${tags}</p>
+          <p>Tags: ${task.tags.join(', ')}</p>
           <div class="increment-buttons">
             <button class="small-button" onclick="incrementTime(${i},1)">+1 Min</button>
             <button class="small-button" onclick="incrementTime(${i},5)">+5 Min</button>
@@ -598,7 +598,7 @@
             <label>Time Spent (min)</label>
             <input type="number" id="editTime${i}" value="${task.timeSpent}">
             <p>Select Goals (Tags):</p>
-            <div id="editTaskGoals${i}" class="editTaskGoalsContainer">
+            <div id="editTaskGoals${i}">
               ${tagPills}
             </div>
             <button class="small-button" onclick="saveEdit(${i})">Save</button>
@@ -606,14 +606,14 @@
         list.appendChild(el);
       });
 
-      // 🎉 per-goal 10h celebrations:
-      Object.entries(goals).forEach(([gName, gData]) => {
-        const hours = Math.floor(gData.totalMinutes / 60);
+      // milestone celebrations
+      Object.entries(goals).forEach(([name, data]) => {
+        const hours = Math.floor(data.totalMinutes / 60);
         const milestone = Math.floor(hours / 10) * 10;
-        const key = `lastCelebratedMilestone_${gName}`;
+        const key = `lastCelebratedMilestone_${name}`;
         const last = parseInt(localStorage.getItem(key)) || 0;
         if (milestone > 0 && milestone > last) {
-          showCongratulation(`Goal “${gName}” hit ${milestone} h!`);
+          showCongratulation(`Goal “${name}” hit ${milestone} h!`);
           localStorage.setItem(key, milestone);
         }
       });
@@ -623,66 +623,48 @@
       bigGoalTitle.textContent = BIG_GOAL_NAME;
     }
 
-    function toggleEditForm(i) {
-      const f = document.getElementById(`editForm${i}`);
-      if (f) f.style.display = f.style.display==='none'?'flex':'none';
-    }
-    function saveEdit(i) {
-      const n = document.getElementById(`editName${i}`).value.trim();
-      const gVal = parseInt(document.getElementById(`editGoal${i}`).value)||0;
-      const pVal = parseInt(document.getElementById(`editProgress${i}`).value)||0;
-      const tVal = parseInt(document.getElementById(`editTime${i}`).value)||0;
-      const sel = Array.from(
-        document.getElementById(`editTaskGoals${i}`).querySelectorAll('.tag-pill.selected')
-      ).map(p=>p.textContent);
-      if (!n) { alert('Name cannot be empty'); return; }
-      const t = tasks.splice(i,1)[0];
-      t.name=n; t.goal=gVal; t.progress=pVal; t.timeSpent=tVal; t.tags=sel;
-      tasks.unshift(t);
-      saveTasks(); recalcGoalsFromTasks(); renderTasks();
-    }
-    function deleteTask(i) {
-      if (!confirm(`Delete task "${tasks[i].name}"?`)) return;
-      tasks.splice(i,1);
-      saveTasks(); recalcGoalsFromTasks(); renderTasks();
-    }
-    function incrementProgress(i) {
-      const t = tasks.splice(i,1)[0];
-      t.progress++;
-      tasks.unshift(t);
-      saveTasks(); recalcGoalsFromTasks(); renderTasks();
-    }
-    function incrementTime(i, mins) {
-      const t = tasks.splice(i,1)[0];
-      t.timeSpent += mins;
-      tasks.unshift(t);
-      saveTasks(); recalcGoalsFromTasks(); renderTasks();
+    /* ---------------------- misc helpers ---------------------- */
+    function showCongratulation(msg) {
+      congratsMessage.textContent = msg;
+      congratsMessage.style.display = 'block';
+      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      setTimeout(() => congratsMessage.style.display = 'none', 5000);
     }
 
+    /* ---------------------- goal edit placeholder ---------------------- */
+    function startEditGoal(name) {
+      const newName = prompt('Rename goal?', name);
+      if (!newName || newName === name) return;
+      if (goals[newName]) { alert('Name already exists'); return; }
+      goals[newName] = goals[name];
+      delete goals[name];
+      tasks.forEach(t => {
+        if (t.tags) t.tags = t.tags.map(tag => tag === name ? newName : tag);
+      });
+      saveGoals(); saveTasks(); renderGoals(); renderTasks();
+    }
+
+    /* ---------------------- XLSX import/export ---------------------- */
     async function importXLSX(evt) {
       try {
         const file = evt.target.files[0];
         if (!file) return;
         const data = await file.arrayBuffer();
-        const wb = XLSX.read(data,{type:'array'});
-        if (!wb.SheetNames.includes('Tasks')) {
-          alert("No 'Tasks' sheet"); return;
-        }
+        const wb = XLSX.read(data, { type: 'array' });
+        if (!wb.SheetNames.includes('Tasks')) { alert("No 'Tasks' sheet"); return; }
         const js = XLSX.utils.sheet_to_json(wb.Sheets['Tasks']);
-        if (!js.length) { alert("No tasks"); return; }
-        tasks = js.map(r=>{
-          return {
-            name: r.Name||'',
-            goal: parseInt(r.Goal)||0,
-            progress: parseInt(r.Progress)||0,
-            timeSpent: parseInt(r.TimeSpent)||0,
-            tags: r.Tags? r.Tags.split(',').map(t=>t.trim()):[],
-            lastUpdated: new Date().toISOString()
-          };
-        });
+        if (!js.length) { alert('No tasks'); return; }
+        tasks = js.map(r => ({
+          name: r.Name || '',
+          goal: parseInt(r.Goal) || 0,
+          progress: parseInt(r.Progress) || 0,
+          timeSpent: parseInt(r.TimeSpent) || 0,
+          tags: r.Tags ? r.Tags.split(',').map(t => t.trim()) : [],
+          lastUpdated: new Date().toISOString()
+        }));
         saveTasks(); recalcGoalsFromTasks(); renderTasks(); renderGoals();
         alert(`Imported ${tasks.length} tasks!`);
-      } catch(e) {
+      } catch (e) {
         console.error(e); alert('Import failed');
       } finally {
         csvInput.value = '';
@@ -690,9 +672,12 @@
     }
 
     function exportXLSX() {
-      const data = tasks.map(t=>({
-        Name:t.name, Goal:t.goal, Progress:t.progress,
-        TimeSpent:t.timeSpent, Tags:t.tags.join(', ')
+      const data = tasks.map(t => ({
+        Name: t.name,
+        Goal: t.goal,
+        Progress: t.progress,
+        TimeSpent: t.timeSpent,
+        Tags: t.tags.join(', ')
       }));
       const ws = XLSX.utils.json_to_sheet(data);
       const wb = XLSX.utils.book_new();
@@ -701,33 +686,25 @@
       alert('Export complete!');
     }
 
+    /* ---------------------- clear ---------------------- */
     function clearStorage() {
-      localStorage.removeItem('tasks');
-      localStorage.removeItem('weeklyProgress');
-      localStorage.removeItem('goals');
-      // remove all per-goal milestone keys
-      Object.keys(localStorage).forEach(k=>{
-        if (k.startsWith('lastCelebratedMilestone_')) localStorage.removeItem(k);
-      });
-      tasks=[]; weeklyProgress={startDate:null}; goals={};
-      BIG_GOAL_NAME='1000 Hours';
-      GOAL_TOTAL_HOURS=1000; GOAL_WEEKLY_HOURS=21;
+      if (!confirm('This will delete all data – continue?')) return;
+      localStorage.clear();
+      tasks = []; weeklyProgress = { startDate: null }; goals = {};
+      BIG_GOAL_NAME = '1000 Hours';
+      GOAL_TOTAL_HOURS = 1000;
+      GOAL_WEEKLY_HOURS = 21;
       renderTasks(); renderGoals();
     }
 
+    /* ---------------------- init ---------------------- */
     function loadData() {
-      const t = localStorage.getItem('tasks');
-      if (t) tasks=JSON.parse(t);
-      const w = localStorage.getItem('weeklyProgress');
-      weeklyProgress = w? JSON.parse(w) : { startDate:null };
-      const g = localStorage.getItem('goals');
-      if (g) goals=JSON.parse(g);
-
+      tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+      weeklyProgress = JSON.parse(localStorage.getItem('weeklyProgress')) || { startDate: null };
+      goals = JSON.parse(localStorage.getItem('goals')) || {};
       recalcGoalsFromTasks();
       const now = new Date();
-      if (shouldResetWeeklyProgress(now, weeklyProgress.startDate)) {
-        resetWeeklyProgress(now);
-      }
+      if (shouldResetWeeklyProgress(now, weeklyProgress.startDate)) resetWeeklyProgress(now);
       renderTasks();
       renderGoals();
       searchInput.addEventListener('input', renderTasks);
