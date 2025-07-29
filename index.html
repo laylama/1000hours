@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🌲 1000 Hours</title>
   <link rel="apple-touch-icon" href="logo2.png">
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <meta name="apple-mobile-web-app-title" content="1000 Hours"/>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="1000 Hours" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600&display=swap');
+
     :root {
       --salmon: #F79F77;
       --light-blue: #80BEF5;
@@ -18,7 +20,11 @@
       --white: #FFFFFF;
       --light-gray: #F5F5F5;
     }
-    * { box-sizing: border-box; }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Raleway', sans-serif;
       color: var(--black);
@@ -26,16 +32,22 @@
       padding: 20px;
       background-color: var(--white);
     }
+
     .container {
       max-width: 1000px;
       margin: 0 auto;
       background: var(--white);
       border-radius: 20px;
       padding: 25px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
       position: relative;
     }
-    .goal-card.full-width-goal { width: 90%; max-width: 90%; }
+
+    .goal-card.full-width-goal {
+      width: 90%;
+      max-width: 90%;
+    }
+
     h1 {
       font-size: 40px;
       color: var(--black);
@@ -43,6 +55,7 @@
       margin-bottom: 1.5rem;
       font-weight: 700;
     }
+
     .corner-buttons {
       position: absolute;
       top: 10px;
@@ -50,6 +63,7 @@
       display: flex;
       gap: 10px;
     }
+
     .corner-button {
       padding: 5px 10px;
       font-size: 12px;
@@ -60,8 +74,13 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-    .corner-button:hover { background-color: rgba(128,190,245,0.2); }
-    .goal-form, .task-form {
+
+    .corner-button:hover {
+      background-color: rgba(128, 190, 245, 0.2);
+    }
+
+    .goal-form,
+    .task-form {
       display: none;
       background: var(--light-gray);
       padding: 10px;
@@ -72,7 +91,9 @@
       z-index: 999;
       width: 250px;
     }
-    .goal-form input, .task-form input {
+
+    .goal-form input,
+    .task-form input {
       width: calc(100% - 2rem);
       padding: 12px 15px;
       border: 2px solid var(--light-blue);
@@ -80,7 +101,9 @@
       font-size: 16px;
       margin-bottom: 15px;
     }
-    .goal-form button, .task-form button {
+
+    .goal-form button,
+    .task-form button {
       background: var(--black);
       color: var(--white);
       border: none;
@@ -91,7 +114,12 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
-    .goal-form button:hover, .task-form button:hover { background: var(--salmon); }
+
+    .goal-form button:hover,
+    .task-form button:hover {
+      background: var(--salmon);
+    }
+
     .search-bar {
       width: calc(100% - 2rem);
       padding: 12px 15px;
@@ -101,7 +129,9 @@
       margin-bottom: 15px;
       transition: all 0.3s ease;
     }
-    button, .small-button {
+
+    button,
+    .small-button {
       background: var(--black);
       color: var(--white);
       border: none;
@@ -112,12 +142,22 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
-    button:hover, .small-button:hover {
+
+    button:hover,
+    .small-button:hover {
       background: var(--salmon);
       transform: translateY(-2px);
     }
-    button:active, .small-button:active { transform: translateY(1px); }
-    #csvInput { display: none; }
+
+    button:active,
+    .small-button:active {
+      transform: translateY(1px);
+    }
+
+    #csvInput {
+      display: none;
+    }
+
     .task {
       background: var(--light-gray);
       border: none;
@@ -126,17 +166,20 @@
       margin-bottom: 20px;
       transition: all 0.3s ease;
     }
+
     .task-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 15px;
     }
+
     .task-title {
       font-size: 20px;
       font-weight: 600;
       color: var(--black);
     }
+
     .progress-bar {
       position: relative;
       height: 16px;
@@ -145,10 +188,12 @@
       overflow: hidden;
       margin: 15px 0;
     }
+
     .progress {
       height: 100%;
       background: linear-gradient(45deg, var(--salmon), var(--light-blue), var(--pale-yellow));
     }
+
     .progress-text {
       position: absolute;
       width: 100%;
@@ -162,23 +207,27 @@
       color: var(--black);
       font-weight: 600;
     }
+
     .increment-buttons {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
     }
+
     .increment-buttons button {
       padding: 8px 12px;
       font-size: 12px;
       flex: 1;
       min-width: 70px;
     }
+
     .edit-form {
       display: flex;
       flex-direction: column;
       gap: 10px;
       margin-top: 15px;
     }
+
     .tag-pill {
       display: inline-block;
       background: var(--light-blue);
@@ -192,7 +241,11 @@
       margin-right: 5px;
       margin-bottom: 5px;
     }
-    .tag-pill.selected { background: var(--salmon); }
+
+    .tag-pill.selected {
+      background: var(--salmon);
+    }
+
     #congratsMessage {
       position: fixed;
       top: 0;
@@ -205,12 +258,17 @@
       z-index: 1000;
       display: none;
     }
-    .goals-list { margin-bottom: 8px; }
+
+    .goals-list {
+      margin-bottom: 8px;
+    }
+
     .goals-list h2 {
       font-size: 20px;
       margin-bottom: 10px;
       font-weight: 600;
     }
+
     .goals-scroll {
       display: flex;
       gap: 20px;
@@ -218,6 +276,7 @@
       white-space: nowrap;
       padding-bottom: 10px;
     }
+
     .goal-card {
       background: var(--light-gray);
       border-radius: 10px;
@@ -226,11 +285,20 @@
       flex: 0 0 auto;
       position: relative;
     }
+
     .goal-card h3 {
       font-size: 16px;
       font-weight: 600;
       color: var(--black);
     }
+
+    .level-indicator {
+      font-size: 12px;
+      font-weight: 400;
+      color: #888;
+      margin-left: 5px;
+    }
+
     .goal-progress-bar {
       position: relative;
       height: 16px;
@@ -239,11 +307,13 @@
       overflow: hidden;
       margin-bottom: 10px;
     }
+
     .goal-progress {
       height: 100%;
       background: linear-gradient(45deg, var(--salmon), var(--light-blue), var(--pale-yellow));
       transition: width 0.3s ease;
     }
+
     .goal-progress-text {
       position: absolute;
       width: 100%;
@@ -257,6 +327,7 @@
       color: var(--black);
       font-weight: 600;
     }
+
     .edit-delete-btns {
       position: absolute;
       top: 10px;
@@ -264,6 +335,7 @@
       display: flex;
       gap: 5px;
     }
+
     .edit-delete-btns button {
       background: none;
       border: none;
@@ -273,14 +345,164 @@
       padding: 3px 5px;
       border-radius: 5px;
     }
+
     .edit-delete-btns button:hover {
       background: var(--light-blue);
       color: var(--white);
     }
+
+    .celebration-badge {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      color: var(--black);
+      padding: 3px 5px;
+      border-radius: 5px;
+    }
+
+    .celebration-badge:hover {
+      background: var(--light-blue);
+      color: var(--white);
+    }
+
+    .level-up-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .level-up-content {
+      background: var(--white);
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      max-width: 400px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .level-up-content h3 {
+      margin-bottom: 20px;
+      color: var(--black);
+    }
+
+    .level-up-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .level-up-buttons button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .keep-btn {
+      background: var(--light-blue);
+      color: var(--white);
+    }
+
+    .keep-btn:hover {
+      background: var(--salmon);
+    }
+
+    .level-up-btn {
+      background: var(--black);
+      color: var(--white);
+    }
+
+    .level-up-btn:hover {
+      background: var(--salmon);
+    }
+
+    .weekly-dashboard {
+      margin-top: 10px;
+      padding: 5px 0;
+    }
+
+    .weekly-chart {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      height: 25px;
+      gap: 2px;
+    }
+
+    .day-bar {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .bar {
+      width: 100%;
+      min-height: 2px;
+      background: #d0d0d0;
+      border-radius: 2px 2px 0 0;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .day-label {
+      font-size: 8px;
+      color: var(--black);
+      margin-top: 2px;
+      font-weight: 500;
+    }
+
+    .time-tooltip {
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--black);
+      color: var(--white);
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-size: 8px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      margin-bottom: 2px;
+    }
+
+    .day-bar:hover .time-tooltip {
+      opacity: 1;
+    }
   </style>
 </head>
+
 <body>
   <div id="congratsMessage"></div>
+
+  <!-- Level Up Modal -->
+  <div class="level-up-modal" id="levelUpModal">
+    <div class="level-up-content">
+      <h3 id="levelUpTitle">🎉 Congratulations!</h3>
+      <p id="levelUpMessage">You've reached 1000 hours!</p>
+      <div class="level-up-buttons">
+        <button class="keep-btn" onclick="keepCelebration()">Keep</button>
+        <button class="level-up-btn" onclick="levelUpGoal()">Level Up</button>
+      </div>
+    </div>
+  </div>
+
   <div class="container">
     <div class="corner-buttons">
       <button class="corner-button" onclick="toggleGoalForm()">+ Goal</button>
@@ -327,6 +549,9 @@
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     let weeklyProgress = JSON.parse(localStorage.getItem('weeklyProgress')) || { startDate: null };
     let goals = JSON.parse(localStorage.getItem('goals')) || {};
+    let goalLevels = JSON.parse(localStorage.getItem('goalLevels')) || {};
+    let dailyGoalTime = JSON.parse(localStorage.getItem('dailyGoalTime')) || {};
+    let currentLevelUpGoal = null;
 
     const congratsMessage = document.getElementById('congratsMessage');
     const goalsListDiv = document.querySelector('.goals-list');
@@ -371,6 +596,8 @@
 
     /* ---------------------- persistence helpers ---------------------- */
     function saveGoals() { localStorage.setItem('goals', JSON.stringify(goals)); }
+    function saveGoalLevels() { localStorage.setItem('goalLevels', JSON.stringify(goalLevels)); }
+    function saveDailyGoalTime() { localStorage.setItem('dailyGoalTime', JSON.stringify(dailyGoalTime)); }
     function saveTasks() {
       localStorage.setItem('tasks', JSON.stringify(tasks));
       localStorage.setItem('weeklyProgress', JSON.stringify(weeklyProgress));
@@ -411,7 +638,9 @@
       if (!name) { alert('Goal name cannot be empty.'); return; }
       if (goals[name]) { alert('Goal already exists.'); return; }
       goals[name] = { totalMinutes: 0, weeklyMinutes: 0, weeklyBaseline: 0 };
+      goalLevels[name] = { level: 1, showCelebration: false };
       saveGoals();
+      saveGoalLevels();
       newGoalInput.value = '';
       toggleGoalForm();
       renderGoals();
@@ -420,9 +649,13 @@
     function deleteGoal(name) {
       if (!confirm(`Delete goal "${name}"?`)) return;
       delete goals[name];
+      delete goalLevels[name];
+      delete dailyGoalTime[name];
       localStorage.removeItem(`lastCelebratedMilestone_${name}`);
       tasks.forEach(t => { if (t.tags) t.tags = t.tags.filter(tag => tag !== name); });
       saveGoals();
+      saveGoalLevels();
+      saveDailyGoalTime();
       saveTasks();
       recalcGoalsFromTasks();
       renderGoals();
@@ -465,7 +698,17 @@
       const tVal = parseInt(document.getElementById(`editTime${i}`).value) || 0;
       const sel = Array.from(document.getElementById(`editTaskGoals${i}`).querySelectorAll('.tag-pill.selected')).map(p => p.textContent);
       if (!n) { alert('Name cannot be empty'); return; }
+
       const t = tasks.splice(i, 1)[0];
+      const timeDiff = tVal - t.timeSpent;
+
+      // Update daily goal time tracking for time changes
+      if (timeDiff !== 0) {
+        sel.forEach(goalName => {
+          updateDailyGoalTime(goalName, timeDiff);
+        });
+      }
+
       Object.assign(t, { name: n, goal: gVal, progress: pVal, timeSpent: tVal, tags: sel });
       tasks.unshift(t);
       saveTasks(); recalcGoalsFromTasks(); renderTasks();
@@ -487,6 +730,12 @@
     function incrementTime(i, mins) {
       const t = tasks.splice(i, 1)[0];
       t.timeSpent += mins;
+
+      // Update daily goal time tracking
+      (t.tags || []).forEach(goalName => {
+        updateDailyGoalTime(goalName, mins);
+      });
+
       tasks.unshift(t);
       saveTasks(); recalcGoalsFromTasks(); renderTasks();
     }
@@ -514,6 +763,73 @@
       if (shouldResetWeeklyProgress(now, weeklyProgress.startDate)) resetWeeklyProgress(now);
     }
 
+    /* ---------------------- daily time tracking ---------------------- */
+    function getTodayKey() {
+      const today = new Date();
+      return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    }
+
+    function getWeekDates() {
+      const now = new Date();
+      const monday = new Date(now);
+      monday.setDate(now.getDate() - now.getDay() + 1);
+
+      const weekDates = [];
+      for (let i = 0; i < 7; i++) {
+        const date = new Date(monday);
+        date.setDate(monday.getDate() + i);
+        weekDates.push(`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`);
+      }
+      return weekDates;
+    }
+
+    function updateDailyGoalTime(goalName, minutesAdded) {
+      const today = getTodayKey();
+      if (!dailyGoalTime[goalName]) {
+        dailyGoalTime[goalName] = {};
+      }
+      if (!dailyGoalTime[goalName][today]) {
+        dailyGoalTime[goalName][today] = 0;
+      }
+      dailyGoalTime[goalName][today] += minutesAdded;
+      saveDailyGoalTime();
+    }
+
+    function buildWeeklyDashboard(goalName) {
+      const weekDates = getWeekDates();
+      const dayLabels = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+      const goalData = dailyGoalTime[goalName] || {};
+
+      // Fixed scale: 3 hours (180 minutes) = full bar height
+      const maxMinutes = 180; // 3 hours
+
+      let chartHTML = '<div class="weekly-dashboard"><div class="weekly-chart">';
+
+      weekDates.forEach((date, index) => {
+        const minutes = goalData[date] || 0;
+        const hours = Math.floor(minutes / 60);
+        const remainingMins = minutes % 60;
+
+        // Scale based on fixed 3-hour maximum (180 minutes) - shorter bars
+        const height = minutes > 0 ? Math.max((minutes / maxMinutes) * 20, 2) : 2;
+
+        const timeText = hours > 0 ?
+          (remainingMins > 0 ? `${hours}h ${remainingMins}m` : `${hours}h`) :
+          (remainingMins > 0 ? `${remainingMins}m` : '0m');
+
+        chartHTML += `
+          <div class="day-bar">
+            <div class="bar" style="height: ${height}px;">
+              <div class="time-tooltip">${timeText}</div>
+            </div>
+            <div class="day-label">${dayLabels[index]}</div>
+          </div>`;
+      });
+
+      chartHTML += '</div></div>';
+      return chartHTML;
+    }
+
     /* ---------------------- rendering ---------------------- */
     function renderGoals() {
       goalsContainer.innerHTML = '';
@@ -523,23 +839,38 @@
 
       const buildCard = (gName, fullWidth = false) => {
         const d = goals[gName];
-        const overall = Math.min((d.totalMinutes / (GOAL_TOTAL_HOURS * 60)) * 100, 100);
+        const level = goalLevels[gName] || { level: 1, showCelebration: false };
+        const targetHours = level.level * 1000;
+        const overall = Math.min((d.totalMinutes / (targetHours * 60)) * 100, 100);
         const weekly = Math.min((d.weeklyMinutes / (GOAL_WEEKLY_HOURS * 60)) * 100, 100);
         const th = Math.floor(d.totalMinutes / 60);
         const wh = Math.floor(d.weeklyMinutes / 60);
+
+        // Check if should show celebration
+        if (checkForLevelUp(gName)) {
+          setTimeout(() => showLevelUpModal(gName), 100);
+        }
+
         const card = document.createElement('div');
         card.className = 'goal-card' + (fullWidth ? ' full-width-goal' : '');
+        card.style.position = 'relative';
+
+        const celebrationBadge = level.showCelebration ?
+          `<button class="celebration-badge" onclick="showLevelUpModal('${gName}')">🎉</button>` : '';
+
         card.innerHTML = `
-          <h3>${gName}</h3>
+          <h3>${gName}${level.level > 1 ? `<span class="level-indicator">lv.${level.level}</span>` : ''}</h3>
           <div class="goal-progress-bar">
             <div class="goal-progress" style="width:${overall}%"></div>
-            <div class="goal-progress-text">${th}/${GOAL_TOTAL_HOURS}</div>
+            <div class="goal-progress-text">${th}/${targetHours}</div>
           </div>
           <div class="goal-progress-bar">
             <div class="goal-progress" style="width:${weekly}%"></div>
             <div class="goal-progress-text">${wh}/${GOAL_WEEKLY_HOURS}</div>
           </div>
+          ${buildWeeklyDashboard(gName)}
           <div class="edit-delete-btns">
+            ${celebrationBadge}
             <button onclick="startEditGoal('${gName}')">✏️</button>
             <button onclick="deleteGoal('${gName}')">🗑️</button>
           </div>`;
@@ -623,6 +954,59 @@
       bigGoalTitle.textContent = BIG_GOAL_NAME;
     }
 
+    /* ---------------------- level up functionality ---------------------- */
+    function checkForLevelUp(goalName) {
+      const goal = goals[goalName];
+      if (!goal) return;
+
+      const hours = Math.floor(goal.totalMinutes / 60);
+      const level = goalLevels[goalName] || { level: 1, showCelebration: false };
+      const targetHours = level.level * 1000;
+
+      if (hours >= targetHours && !level.showCelebration) {
+        level.showCelebration = true;
+        goalLevels[goalName] = level;
+        saveGoalLevels();
+        return true;
+      }
+      return false;
+    }
+
+    function showLevelUpModal(goalName) {
+      currentLevelUpGoal = goalName;
+      const level = goalLevels[goalName];
+      const targetHours = level.level * 1000;
+
+      document.getElementById('levelUpTitle').textContent = `🎉 Congratulations!`;
+      document.getElementById('levelUpMessage').textContent = `"${goalName}" has reached ${targetHours} hours!`;
+      document.getElementById('levelUpModal').style.display = 'flex';
+
+      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+    }
+
+    function keepCelebration() {
+      document.getElementById('levelUpModal').style.display = 'none';
+      currentLevelUpGoal = null;
+      renderGoals();
+    }
+
+    function levelUpGoal() {
+      if (!currentLevelUpGoal) return;
+
+      const goalName = currentLevelUpGoal;
+      const level = goalLevels[goalName];
+      level.level += 1;
+      level.showCelebration = false;
+      goalLevels[goalName] = level;
+      saveGoalLevels();
+
+      document.getElementById('levelUpModal').style.display = 'none';
+      renderGoals();
+
+      showCongratulation(`"${goalName}" leveled up! New target: ${level.level * 1000} hours`);
+      currentLevelUpGoal = null;
+    }
+
     /* ---------------------- misc helpers ---------------------- */
     function showCongratulation(msg) {
       congratsMessage.textContent = msg;
@@ -637,11 +1021,15 @@
       if (!newName || newName === name) return;
       if (goals[newName]) { alert('Name already exists'); return; }
       goals[newName] = goals[name];
+      goalLevels[newName] = goalLevels[name] || { level: 1, showCelebration: false };
+      dailyGoalTime[newName] = dailyGoalTime[name] || {};
       delete goals[name];
+      delete goalLevels[name];
+      delete dailyGoalTime[name];
       tasks.forEach(t => {
         if (t.tags) t.tags = t.tags.map(tag => tag === name ? newName : tag);
       });
-      saveGoals(); saveTasks(); renderGoals(); renderTasks();
+      saveGoals(); saveGoalLevels(); saveDailyGoalTime(); saveTasks(); renderGoals(); renderTasks();
     }
 
     /* ---------------------- XLSX import/export ---------------------- */
@@ -702,6 +1090,17 @@
       tasks = JSON.parse(localStorage.getItem('tasks')) || [];
       weeklyProgress = JSON.parse(localStorage.getItem('weeklyProgress')) || { startDate: null };
       goals = JSON.parse(localStorage.getItem('goals')) || {};
+      goalLevels = JSON.parse(localStorage.getItem('goalLevels')) || {};
+      dailyGoalTime = JSON.parse(localStorage.getItem('dailyGoalTime')) || {};
+
+      // Initialize goal levels for existing goals
+      Object.keys(goals).forEach(goalName => {
+        if (!goalLevels[goalName]) {
+          goalLevels[goalName] = { level: 1, showCelebration: false };
+        }
+      });
+      saveGoalLevels();
+
       recalcGoalsFromTasks();
       const now = new Date();
       if (shouldResetWeeklyProgress(now, weeklyProgress.startDate)) resetWeeklyProgress(now);
@@ -714,4 +1113,5 @@
     window.addEventListener('load', loadData);
   </script>
 </body>
+
 </html>
