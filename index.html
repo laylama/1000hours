@@ -810,8 +810,9 @@
         const hours = Math.floor(minutes / 60);
         const remainingMins = minutes % 60;
 
-        // Scale based on fixed 3-hour maximum (180 minutes) - shorter bars
-        const height = minutes > 0 ? Math.max((minutes / maxMinutes) * 20, 2) : 2;
+        // Scale based on fixed 3-hour maximum (180 minutes) - cap at 3 hours max
+        const cappedMinutes = Math.min(minutes, maxMinutes); // Cap at 180 minutes (3 hours)
+        const height = cappedMinutes > 0 ? Math.max((cappedMinutes / maxMinutes) * 20, 2) : 2;
 
         const timeText = hours > 0 ?
           (remainingMins > 0 ? `${hours}h ${remainingMins}m` : `${hours}h`) :
