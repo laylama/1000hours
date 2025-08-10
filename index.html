@@ -92,6 +92,15 @@
       width: 250px;
     }
 
+    .goal-form label,
+    .task-form label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--black);
+      margin-bottom: 5px;
+    }
+
     .goal-form input,
     .task-form input {
       width: calc(100% - 2rem);
@@ -120,14 +129,23 @@
       background: var(--salmon);
     }
 
+    label[for="searchInput"] {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--black);
+      margin-bottom: 5px;
+    }
+
     .search-bar {
-      width: calc(100% - 2rem);
+      width: 100%;
       padding: 12px 15px;
       border: 2px solid var(--light-blue);
       border-radius: 10px;
       font-size: 16px;
       margin-bottom: 15px;
       transition: all 0.3s ease;
+      box-sizing: border-box;
     }
 
     button,
@@ -510,12 +528,15 @@
     </div>
 
     <div class="goal-form" id="goalForm">
+      <label for="newGoalInput">Goal Name:</label>
       <input type="text" id="newGoalInput" placeholder="Enter new goal name" />
       <button onclick="createGoal()">Add</button>
     </div>
 
     <div class="task-form" id="taskForm">
+      <label for="newTaskName">Task Name:</label>
       <input type="text" id="newTaskName" placeholder="Enter new task name" />
+      <label for="newTaskGoal">Task Goal:</label>
       <input type="number" id="newTaskGoal" placeholder="Task goal (number)" />
       <p>Select Goals (Tags):</p>
       <div id="newTaskGoalsContainer"></div>
@@ -529,7 +550,7 @@
       <div class="goals-scroll" id="goalsContainer"></div>
     </div>
 
-    <input type="text" id="searchInput" class="search-bar" placeholder="Search tasks..." />
+    <input type="text" id="searchInput" class="search-bar" placeholder="Search tasks..." aria-label="Search tasks" />
     <div id="taskList"></div>
 
     <div class="button-group">
@@ -615,17 +636,27 @@
       tasks.forEach(t => {
         (t.tags || []).forEach(tag => {
           if (!updated[tag]) {
-            updated[tag] = { totalMinutes: 0, weeklyBaseline: 0, weeklyMinutes: 0 };
+            updated[tag] = { totalMinutes: 0, weeklyBaseline: 0, weeklyMinutes: 0, lastUpdated: new Date().toISOString() };
           }
           updated[tag].totalMinutes += t.timeSpent;
         });
       });
 
-      // 3️⃣ Recompute weekly minutes & defaults
+      // 3️⃣ Recompute weekly minutes & defaults and update lastUpdated if totalMinutes changed
+      const now = new Date().toISOString();
       Object.keys(updated).forEach(name => {
         const g = updated[name];
+        const oldMinutes = goals[name]?.totalMinutes || 0;
+        
         if (typeof g.weeklyBaseline !== 'number') g.weeklyBaseline = g.totalMinutes;
         g.weeklyMinutes = g.totalMinutes - g.weeklyBaseline;
+        
+        // Update lastUpdated only if totalMinutes actually changed
+        if (g.totalMinutes !== oldMinutes) {
+          g.lastUpdated = now;
+        } else if (!g.lastUpdated) {
+          g.lastUpdated = goals[name]?.lastUpdated || '1970-01-01';
+        }
       });
 
       goals = updated;
@@ -637,7 +668,7 @@
       const name = newGoalInput.value.trim();
       if (!name) { alert('Goal name cannot be empty.'); return; }
       if (goals[name]) { alert('Goal already exists.'); return; }
-      goals[name] = { totalMinutes: 0, weeklyMinutes: 0, weeklyBaseline: 0 };
+      goals[name] = { totalMinutes: 0, weeklyMinutes: 0, weeklyBaseline: 0, lastUpdated: new Date().toISOString() };
       goalLevels[name] = { level: 1, showCelebration: false };
       saveGoals();
       saveGoalLevels();
@@ -760,7 +791,16 @@
 
     function updateWeeklyProgress() {
       const now = new Date();
-      if (shouldResetWeeklyProgress(now, weeklyProgress.startDate)) resetWeeklyProgress(now);
+      console.log('Checking weekly progress:', {
+        now: now.toISOString(),
+        startDate: weeklyProgress.startDate,
+        shouldReset: shouldResetWeeklyProgress(now, weeklyProgress.startDate)
+      });
+
+      if (shouldResetWeeklyProgress(now, weeklyProgress.startDate)) {
+        console.log('Resetting weekly progress!');
+        resetWeeklyProgress(now);
+      }
     }
 
     /* ---------------------- daily time tracking ---------------------- */
@@ -772,7 +812,11 @@
     function getWeekDates() {
       const now = new Date();
       const monday = new Date(now);
-      monday.setDate(now.getDate() - now.getDay() + 1);
+      
+      // Fix: Handle Sunday (day 0) correctly - it should be part of the current week
+      const dayOfWeek = now.getDay();
+      const daysFromMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Sunday = -6, Monday = 0, Tuesday = -1, etc.
+      monday.setDate(now.getDate() + daysFromMonday);
 
       const weekDates = [];
       for (let i = 0; i < 7; i++) {
@@ -800,6 +844,8 @@
       const dayLabels = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
       const goalData = dailyGoalTime[goalName] || {};
 
+
+
       // Fixed scale: 3 hours (180 minutes) = full bar height
       const maxMinutes = 180; // 3 hours
 
@@ -812,7 +858,8 @@
 
         // Scale based on fixed 3-hour maximum (180 minutes) - cap at 3 hours max
         const cappedMinutes = Math.min(minutes, maxMinutes); // Cap at 180 minutes (3 hours)
-        const height = cappedMinutes > 0 ? Math.max((cappedMinutes / maxMinutes) * 20, 2) : 2;
+        const height = cappedMinutes > 0 ? Math.max((cappedMinutes / maxMinutes) * 15, 5) : 3;
+        const hasData = minutes > 0;
 
         const timeText = hours > 0 ?
           (remainingMins > 0 ? `${hours}h ${remainingMins}m` : `${hours}h`) :
@@ -820,7 +867,7 @@
 
         chartHTML += `
           <div class="day-bar">
-            <div class="bar" style="height: ${height}px;">
+            <div class="bar ${hasData ? 'has-data' : ''}" style="height: ${height}px;">
               <div class="time-tooltip">${timeText}</div>
             </div>
             <div class="day-label">${dayLabels[index]}</div>
@@ -837,6 +884,13 @@
       const names = Object.keys(goals);
       if (!names.length) { goalsListDiv.style.display = 'none'; return; }
       goalsListDiv.style.display = 'block';
+
+      // Sort goals by most recently updated (lastUpdated field)
+      names.sort((a, b) => {
+        const aTime = goals[a].lastUpdated || '1970-01-01';
+        const bTime = goals[b].lastUpdated || '1970-01-01';
+        return new Date(bTime) - new Date(aTime); // Most recent first
+      });
 
       const buildCard = (gName, fullWidth = false) => {
         const d = goals[gName];
