@@ -449,6 +449,7 @@
     .weekly-dashboard {
       margin-top: 10px;
       padding: 5px 0;
+      cursor: pointer;
     }
 
     .weekly-chart {
@@ -503,6 +504,45 @@
     .day-bar:hover .time-tooltip {
       opacity: 1;
     }
+
+    .daily-log-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .daily-log-content {
+      background: var(--white);
+      padding: 20px;
+      border-radius: 15px;
+      max-height: 80%;
+      width: 90%;
+      max-width: 400px;
+      overflow-y: auto;
+      color: var(--black);
+    }
+
+    .daily-log-content h3 {
+      margin-top: 0;
+      text-align: center;
+    }
+
+    .daily-log-content ul {
+      list-style: none;
+      padding-left: 15px;
+    }
+
+    .daily-log-total {
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 
@@ -517,6 +557,16 @@
       <div class="level-up-buttons">
         <button class="keep-btn" onclick="keepCelebration()">Keep</button>
         <button class="level-up-btn" onclick="levelUpGoal()">Level Up</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Daily Log Modal -->
+  <div class="daily-log-modal" id="dailyLogModal">
+    <div class="daily-log-content">
+      <div id="dailyLogContent"></div>
+      <div style="text-align:center; margin-top:10px;">
+        <button onclick="closeDailyLog()">Return</button>
       </div>
     </div>
   </div>
@@ -572,6 +622,7 @@
     let goals = JSON.parse(localStorage.getItem('goals')) || {};
     let goalLevels = JSON.parse(localStorage.getItem('goalLevels')) || {};
     let dailyGoalTime = JSON.parse(localStorage.getItem('dailyGoalTime')) || {};
+    let dailyGoalLog = JSON.parse(localStorage.getItem('dailyGoalLog')) || {};
     let currentLevelUpGoal = null;
 
     const congratsMessage = document.getElementById('congratsMessage');
@@ -619,6 +670,7 @@
     function saveGoals() { localStorage.setItem('goals', JSON.stringify(goals)); }
     function saveGoalLevels() { localStorage.setItem('goalLevels', JSON.stringify(goalLevels)); }
     function saveDailyGoalTime() { localStorage.setItem('dailyGoalTime', JSON.stringify(dailyGoalTime)); }
+    function saveDailyGoalLog() { localStorage.setItem('dailyGoalLog', JSON.stringify(dailyGoalLog)); }
     function saveTasks() {
       localStorage.setItem('tasks', JSON.stringify(tasks));
       localStorage.setItem('weeklyProgress', JSON.stringify(weeklyProgress));
@@ -682,11 +734,13 @@
       delete goals[name];
       delete goalLevels[name];
       delete dailyGoalTime[name];
+      delete dailyGoalLog[name];
       localStorage.removeItem(`lastCelebratedMilestone_${name}`);
       tasks.forEach(t => { if (t.tags) t.tags = t.tags.filter(tag => tag !== name); });
       saveGoals();
       saveGoalLevels();
       saveDailyGoalTime();
+      saveDailyGoalLog();
       saveTasks();
       recalcGoalsFromTasks();
       renderGoals();
@@ -765,6 +819,7 @@
       // Update daily goal time tracking
       (t.tags || []).forEach(goalName => {
         updateDailyGoalTime(goalName, mins);
+        updateDailyGoalLog(goalName, t.name, mins);
       });
 
       tasks.unshift(t);
@@ -839,6 +894,21 @@
       saveDailyGoalTime();
     }
 
+    function updateDailyGoalLog(goalName, taskName, minutesAdded) {
+      const today = getTodayKey();
+      if (!dailyGoalLog[goalName]) {
+        dailyGoalLog[goalName] = {};
+      }
+      if (!dailyGoalLog[goalName][today]) {
+        dailyGoalLog[goalName][today] = {};
+      }
+      if (!dailyGoalLog[goalName][today][taskName]) {
+        dailyGoalLog[goalName][today][taskName] = 0;
+      }
+      dailyGoalLog[goalName][today][taskName] += minutesAdded;
+      saveDailyGoalLog();
+    }
+
     function buildWeeklyDashboard(goalName) {
       const weekDates = getWeekDates();
       const dayLabels = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
@@ -849,7 +919,7 @@
       // Fixed scale: 3 hours (180 minutes) = full bar height
       const maxMinutes = 180; // 3 hours
 
-      let chartHTML = '<div class="weekly-dashboard"><div class="weekly-chart">';
+      let chartHTML = `<div class="weekly-dashboard" onclick="showDailyLog('${goalName}')"><div class="weekly-chart">`;
 
       weekDates.forEach((date, index) => {
         const minutes = goalData[date] || 0;
@@ -876,6 +946,31 @@
 
       chartHTML += '</div></div>';
       return chartHTML;
+    }
+
+    function showDailyLog(goalName) {
+      const modal = document.getElementById('dailyLogModal');
+      const content = document.getElementById('dailyLogContent');
+      const log = dailyGoalLog[goalName] || {};
+      const dates = Object.keys(log).sort().reverse();
+      let html = `<h3>${goalName} Daily Log</h3>`;
+      dates.forEach(date => {
+        const tasks = log[date];
+        const total = Object.values(tasks).reduce((s, m) => s + m, 0);
+        const [y, m, d] = date.split('-');
+        const formatted = `${y.slice(2)}.${m}.${d}`;
+        html += `<div class="daily-log-day"><strong>${formatted}</strong><ul>`;
+        Object.keys(tasks).forEach(t => {
+          html += `<li>- ${t} ${tasks[t]} min</li>`;
+        });
+        html += `</ul><div class="daily-log-total">total: ${total} min</div></div>`;
+      });
+      content.innerHTML = html;
+      modal.style.display = 'flex';
+    }
+
+    function closeDailyLog() {
+      document.getElementById('dailyLogModal').style.display = 'none';
     }
 
     /* ---------------------- rendering ---------------------- */
@@ -1078,13 +1173,15 @@
       goals[newName] = goals[name];
       goalLevels[newName] = goalLevels[name] || { level: 1, showCelebration: false };
       dailyGoalTime[newName] = dailyGoalTime[name] || {};
+      dailyGoalLog[newName] = dailyGoalLog[name] || {};
       delete goals[name];
       delete goalLevels[name];
       delete dailyGoalTime[name];
+      delete dailyGoalLog[name];
       tasks.forEach(t => {
         if (t.tags) t.tags = t.tags.map(tag => tag === name ? newName : tag);
       });
-      saveGoals(); saveGoalLevels(); saveDailyGoalTime(); saveTasks(); renderGoals(); renderTasks();
+      saveGoals(); saveGoalLevels(); saveDailyGoalTime(); saveDailyGoalLog(); saveTasks(); renderGoals(); renderTasks();
     }
 
     /* ---------------------- XLSX import/export ---------------------- */
@@ -1134,6 +1231,7 @@
       if (!confirm('This will delete all data – continue?')) return;
       localStorage.clear();
       tasks = []; weeklyProgress = { startDate: null }; goals = {};
+      dailyGoalTime = {}; dailyGoalLog = {};
       BIG_GOAL_NAME = '1000 Hours';
       GOAL_TOTAL_HOURS = 1000;
       GOAL_WEEKLY_HOURS = 21;
@@ -1147,6 +1245,7 @@
       goals = JSON.parse(localStorage.getItem('goals')) || {};
       goalLevels = JSON.parse(localStorage.getItem('goalLevels')) || {};
       dailyGoalTime = JSON.parse(localStorage.getItem('dailyGoalTime')) || {};
+      dailyGoalLog = JSON.parse(localStorage.getItem('dailyGoalLog')) || {};
 
       // Initialize goal levels for existing goals
       Object.keys(goals).forEach(goalName => {
