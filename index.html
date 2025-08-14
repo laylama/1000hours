@@ -539,10 +539,6 @@
       padding-left: 15px;
     }
 
-    .daily-log-total {
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
   </style>
 </head>
 
@@ -564,10 +560,10 @@
   <!-- Daily Log Modal -->
   <div class="daily-log-modal" id="dailyLogModal">
     <div class="daily-log-content">
-      <div id="dailyLogContent"></div>
-      <div style="text-align:center; margin-top:10px;">
+      <div style="text-align:center; margin-bottom:10px;">
         <button onclick="closeDailyLog()">Return</button>
       </div>
+      <div id="dailyLogContent"></div>
     </div>
   </div>
 
@@ -959,11 +955,11 @@
         const total = Object.values(tasks).reduce((s, m) => s + m, 0);
         const [y, m, d] = date.split('-');
         const formatted = `${y.slice(2)}.${m}.${d}`;
-        html += `<div class="daily-log-day"><strong>${formatted}</strong><ul>`;
+        html += `<div class="daily-log-day"><strong>${formatted} (total: ${total} min)</strong><ul>`;
         Object.keys(tasks).forEach(t => {
           html += `<li>- ${t} ${tasks[t]} min</li>`;
         });
-        html += `</ul><div class="daily-log-total">total: ${total} min</div></div>`;
+        html += `</ul></div>`;
       });
       content.innerHTML = html;
       modal.style.display = 'flex';
