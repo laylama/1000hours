@@ -539,6 +539,30 @@
       padding-left: 15px;
     }
 
+    .daily-log-close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #999;
+      cursor: pointer;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .daily-log-close-btn:hover {
+      background: rgba(0, 0, 0, 0.1);
+      color: var(--black);
+    }
+
   </style>
 </head>
 
@@ -558,11 +582,9 @@
   </div>
 
   <!-- Daily Log Modal -->
-  <div class="daily-log-modal" id="dailyLogModal">
-    <div class="daily-log-content">
-      <div style="text-align:center; margin-bottom:10px;">
-        <button onclick="closeDailyLog()">Return</button>
-      </div>
+  <div class="daily-log-modal" id="dailyLogModal" onclick="closeDailyLogOnOutsideClick(event)">
+    <div class="daily-log-content" onclick="event.stopPropagation()">
+      <button class="daily-log-close-btn" onclick="closeDailyLog()">×</button>
       <div id="dailyLogContent"></div>
     </div>
   </div>
@@ -967,6 +989,12 @@
 
     function closeDailyLog() {
       document.getElementById('dailyLogModal').style.display = 'none';
+    }
+
+    function closeDailyLogOnOutsideClick(event) {
+      if (event.target === document.getElementById('dailyLogModal')) {
+        closeDailyLog();
+      }
     }
 
     /* ---------------------- rendering ---------------------- */
