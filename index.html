@@ -172,6 +172,30 @@
       transform: translateY(1px);
     }
 
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 30px;
+      padding: 20px 0;
+    }
+
+    .button-group .small-button {
+      background: rgba(128, 128, 128, 0.3);
+      color: var(--black);
+      font-size: 12px;
+      padding: 8px 16px;
+      font-weight: 400;
+      opacity: 0.7;
+      border-radius: 6px;
+    }
+
+    .button-group .small-button:hover {
+      background: rgba(128, 128, 128, 0.5);
+      opacity: 1;
+      transform: none;
+    }
+
     #csvInput {
       display: none;
     }
